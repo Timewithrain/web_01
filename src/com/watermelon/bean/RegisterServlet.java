@@ -20,13 +20,14 @@ public class RegisterServlet extends HttpServlet {
 		UserDAO userDao = new UserDAO();
 		//当用户已经存在时，返回提示信息并跳转至注册页面重新注册
 		if(userDao.isUserExists(username)) {	
+			writer.println("用户名已经存在，1秒后跳转至注册页面，重新注册");
 			try {
-				writer.println("用户名已经存在，1秒后跳转至注册页面");
-				request.getRequestDispatcher("register.jsp").forward(request, response);
 				Thread.sleep(1000);
+				request.getRequestDispatcher("register.jsp").forward(request, response);
 			} catch (ServletException | InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 		}else {
 			//数据库中用户不存在时，向数据库中写入注册信息并跳转至登陆页面
 			try {
@@ -36,5 +37,6 @@ public class RegisterServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		userDao.close();
 	}
 }

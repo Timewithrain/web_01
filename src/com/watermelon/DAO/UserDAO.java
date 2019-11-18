@@ -66,11 +66,17 @@ public class UserDAO {
 	
 	//向数据库中添加用户记录
 	public void addUser(User user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
+		//当用户名或密码为空时不做输入
+		if(username==null||password==null) {
+			return;
+		}
 		String sql = "insert into user values (?,?,?)";
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, user.getUsername());
-			statement.setString(2, user.getPassword());
+			statement.setString(1, username);
+			statement.setString(2, password);
 			statement.setString(3, null);
 			statement.execute();
 			connection.commit();
@@ -79,6 +85,29 @@ public class UserDAO {
 		}
 	}
 	
+	//更新用户信息
+	public void update(User user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
+		//当用户名或密码为空时不做输入
+		if(username==null||password==null) {
+			return;
+		}
+		String sql = "update user set name=?,password=?,email=? where name=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			statement.setString(3, null);
+			statement.setString(4, username);
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//关闭数据库连接
 	public void close() {
 		try {
 			statement.close();

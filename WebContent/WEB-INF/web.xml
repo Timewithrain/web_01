@@ -40,5 +40,14 @@
       <url-pattern>/register</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+      <servlet-name>ResetPasswordServlet</servlet-name>
+      <servlet-class>com.watermelon.bean.ResetPasswordServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>ResetPasswordServlet</servlet-name>
+      <url-pattern>/reset</url-pattern>
+  </servlet-mapping>
 
 </web-app>

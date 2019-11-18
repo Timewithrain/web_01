@@ -40,6 +40,6 @@ public class LoginServlet extends HttpServlet {
 			//客户端重定向
 			response.sendRedirect("failure.jsp");
 		}
-		
+		userdao.close();
 	}
 }
