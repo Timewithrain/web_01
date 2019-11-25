@@ -18,7 +18,7 @@ public class ResetPasswordServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		String username = (String) request.getSession().getAttribute("username");
 		if(username==null) {
-			response.sendRedirect("Welcome.jsp");
+			response.sendRedirect("new.jsp");
 			return;
 		}
 		String pwd = request.getParameter("newpassword");
@@ -28,7 +28,7 @@ public class ResetPasswordServlet extends HttpServlet {
 			userDao.update(new User(username,pwd));
 			writer.println("ÃÜÂëÐÞ¸Ä³É¹¦£¡");
 		}else {
-			request.getRequestDispatcher("resetpassword.jsp").forward(request, response);
+			request.getRequestDispatcher("new.jsp").forward(request, response);
 		}
 	}
 }

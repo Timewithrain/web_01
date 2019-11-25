@@ -17,7 +17,7 @@ public class UserDAO {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			//建数据库连接
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/watermelon?characterEncoding=UTF-8","root","105036");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/watermelon?serverTimezone=UTC","root","105036");
 			connection.setAutoCommit(false);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

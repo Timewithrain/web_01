@@ -27,7 +27,7 @@
 
   <servlet-mapping>
       <servlet-name>LoginServlet</servlet-name>
-      <url-pattern>/login</url-pattern>
+      <url-pattern>/exam/login</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -37,7 +37,7 @@
 
   <servlet-mapping>
       <servlet-name>RegisterServlet</servlet-name>
-      <url-pattern>/register</url-pattern>
+      <url-pattern>/exam/register</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -49,5 +49,25 @@
       <servlet-name>ResetPasswordServlet</servlet-name>
       <url-pattern>/reset</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+      <servlet-name>ExitServlet</servlet-name>
+      <servlet-class>com.watermelon.bean.ExitServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>ExitServlet</servlet-name>
+      <url-pattern>/exit</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+      <filter-name>EncodeFilter</filter-name>
+      <filter-class>com.watermelon.filter.EncodeFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+      <filter-name>EncodeFilter</filter-name>
+      <url-pattern>/exam/*</url-pattern>
+  </filter-mapping>
 
 </web-app>

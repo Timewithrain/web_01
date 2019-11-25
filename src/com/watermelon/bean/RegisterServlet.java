@@ -12,7 +12,7 @@ import com.watermelon.DAO.UserDAO;
 
 public class RegisterServlet extends HttpServlet {
 	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		response.setContentType("text/html;charset=utf-8");;
+//		response.setContentType("text/html;charset=utf-8");;
 		PrintWriter writer = response.getWriter();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -23,7 +23,7 @@ public class RegisterServlet extends HttpServlet {
 			writer.println("用户名已经存在，1秒后跳转至注册页面，重新注册");
 			try {
 				Thread.sleep(1000);
-				request.getRequestDispatcher("register.jsp").forward(request, response);
+				request.getRequestDispatcher("new.jsp").forward(request, response);
 			} catch (ServletException | InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -32,7 +32,7 @@ public class RegisterServlet extends HttpServlet {
 			//数据库中用户不存在时，向数据库中写入注册信息并跳转至登陆页面
 			try {
 				userDao.addUser(new User(username,password));
-				request.getRequestDispatcher("Welcome.jsp").forward(request, response);
+				request.getRequestDispatcher("new.jsp").forward(request, response);
 			} catch (ServletException e) {
 				e.printStackTrace();
 			}

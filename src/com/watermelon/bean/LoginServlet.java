@@ -32,13 +32,13 @@ public class LoginServlet extends HttpServlet {
 			//服务器跳转
 			request.getSession().setAttribute("username", username);
 			request.getSession().setAttribute("password", password);
-			request.getRequestDispatcher("success.jsp").forward(request, response);
+			request.getRequestDispatcher("new.jsp").forward(request, response);
 			
 		}else {
 //			writer.println("用户名或密码错误！");
 //			request.getRequestDispatcher("failure.jsp").forward(request, response);
 			//客户端重定向
-			response.sendRedirect("failure.jsp");
+			response.sendRedirect("../failure.jsp");
 		}
 		userdao.close();
 	}
