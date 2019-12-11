@@ -13,5 +13,17 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="D:/DevelopeKit_Java/Jars/mysql-connector-java-8.0.18.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-databind-2.9.8.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-databind-2.9.8-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-core-2.9.8.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-core-2.9.8-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-annotations-2.9.8.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-annotations-2.9.8-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-logging-1.1.1 (1).jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

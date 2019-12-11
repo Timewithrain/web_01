@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AjaxTest</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>题目</td>
+            <td><input type="text" name="title" id="title"></td>
+        </tr>
+        <tr>
+            <td>内容</td>
+            <td><input type="text" name="content" id="content"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="ajax" onclick="fun()"></td>
+            <td><input type="button" value="json" onclick="jsonTest()"></td>
+        </tr>
+    </table>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function fun(){
+        // 普通ajax发送请求
+        // $.ajax({
+        //     url:  "ajax",
+        //     type: "post",
+        //     data: {
+        //         // "title":"曲率驱动的时空相变",
+        //         // "content":"当驱动方向改变时，时间方向也会改变，且本地时间断面会快速扫过其他时间面，向目标方向的未来方向延伸"
+        //         "title": $("#title").val(),
+        //         "content": $("#content").val()
+        //     },
+        //     // 响应成功后接受服务器返回的信息
+        //     success:function(data){
+        //         // var str=decodeURI(data);
+        //         // console.log(str);
+		// 	    // var str=decodeURI(str);
+        //         $("#title").val(str);
+        //         console.log(str);
+        //     },
+        //     // 响应失败以后弹出信息
+        //     error: function(){
+        //         alert("出错了！");
+        //     },
+        //     // 设置接收的数据的类型
+        //     dataType: "text",
+        // });
+
+        // get方式发送请求,简化内容
+        // $.get("ajax",{
+        //     title:$("#title").val(),
+        //     content: $("#content").val()
+        // },function(data){
+        //     $("#title").val(data);
+        // },"text");
+
+        // post方法发送请求
+        // $.post("ajax",{
+        //     title:$("#title").val(),
+        //     content: $("#content").val()
+        // },function(data){
+        //     // $("#title").val(data);
+        //     console.log(data);
+        // },"text");
+
+        // post方法发送json请求
+        // 构造一个json字符串用于发送请求内容
+        var post = JSON.stringify({"data":{"title":$("#title").val(),"content":$("#content").val()}})
+        $.post("ajax",post,function(data){
+            // 接收返回值并打印
+            console.log(data);
+        },"json");
+    }
+
+    //构成一个json并将其显示出来
+    function jsonTest(){
+        var stus =
+            [{"name":"西瓜","age":"19",gender:"female"},
+             {"name":"南瓜","age":"17",gender:"male"},
+             {"name":"冬瓜","age":"18",gender:"male"}];
+        
+        for(var i=0;i<stus.length;i++){
+            var stu = stus[i]
+            for(var key in stu){
+                alert(key+":"+stu[key]);
+            }
+        }
+    }
+
+</script>
+
+</html>

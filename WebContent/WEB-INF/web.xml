@@ -59,6 +59,16 @@
       <servlet-name>ExitServlet</servlet-name>
       <url-pattern>/exit</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>AjaxServlet</servlet-name>
+      <servlet-class>com.watermelon.bean.AjaxServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>AjaxServlet</servlet-name>
+      <url-pattern>/ajax</url-pattern>
+  </servlet-mapping>
 
   <filter>
       <filter-name>EncodeFilter</filter-name>
