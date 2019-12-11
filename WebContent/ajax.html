@@ -68,8 +68,20 @@
 
         // post方法发送json请求
         // 构造一个json字符串用于发送请求内容
-        var post = JSON.stringify({"data":{"title":$("#title").val(),"content":$("#content").val()}})
-        $.post("ajax",post,function(data){
+        var post = JSON.stringify({"username":$("#title").val(),"password":$("#content").val()})
+        console.log(post);
+        // $.ajax({
+        //     type: 'POST',
+        //     url: "ajax",
+        //     data: {"data": post},
+        //     dataType: 'json', // 这里是指希望服务端返回json格式的数据
+        //     success: function(data) {
+        //         console.log(data);
+        //     },
+        //     error: function(xhr, type) {
+        //     }
+        // });
+        $.post("ajax",{"data": post},function(data){
             // 接收返回值并打印
             console.log(data);
         },"json");
