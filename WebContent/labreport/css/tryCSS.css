@@ -1,0 +1,312 @@
+body{
+    background-color: aliceblue;
+}
+
+#header{
+    width: 1000px;
+    height: 120px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+#logo{
+    float: left;
+    margin-left: 10px;
+}
+
+#searchbar{
+    float: left;
+    margin-left: 10px;
+}
+
+#search{
+    width: 271px;
+    height: 27px;
+    padding-left: 30px;
+    border: 2px;
+    border-color: black;
+    outline: none;
+    background-image: url(../img/searchbar.jpg);
+}
+
+#login{
+    float: right;
+    margin-right: 10px;
+}
+
+#login a{
+    text-decoration: none;
+}
+
+#login-dialog{
+    width: 800px;
+    height: 480px;
+}
+
+#register-dialog{
+    width: 760px;
+    height: 480px;
+}
+
+/********************************section*******************************/
+
+#section{
+    width: 1000px;
+    height: 450px;
+    margin: 0 auto;
+    /* background-color: deepskyblue; */
+}
+
+/*********************center*********************/
+
+#center{
+    width: 695px;
+    height: 450px;
+    float: left;
+}
+
+#nav{
+    padding: 10px 0px;
+    background-color: rgb(194, 201, 250);
+}
+
+#nav li{
+    margin: 0px 10px;
+    float: left;
+    list-style: none;
+}
+
+#posts{
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.post{
+    margin: 2px 0px;
+    background-color: rgb(228, 231, 255);
+}
+
+.avatar{
+    width: 60px;
+    height: 60px;
+    float: left;
+}
+
+.avatar img{
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+}
+
+.avatar-tooltip{
+    width: 150px;
+    height: 150px;
+}
+
+.post-content{
+    width: 635px;
+    float: left;
+    /* display: inline; */
+}
+
+.post-title{
+    width: 300px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.reply-count{
+    font-size: 70%;
+    float: right;
+    padding: 0px 3px;
+    margin-right: 15px;
+    border-radius: 12px;
+    color: aliceblue;
+    background-color: darkslateblue;
+}
+
+/*******************side*********************/
+
+#side{
+    width: 295px;
+    height: 450px;
+    float: right;
+}
+
+/************hot-posts**********/
+
+#hot-title{
+    color: aliceblue;
+    background-color: rgb(194, 201, 250);
+    padding: 5px;
+}
+
+#hot-posts{
+    margin-top: 3px;
+    overflow: hidden;
+}
+
+.hot-post{
+    margin: 2px 0px;
+    background-color: rgb(228, 231, 255);
+}
+
+.hot-avatar{
+    width: 40px;
+    height: 40px;
+    float: left;
+}
+
+.hot-avatar img{
+    width: 36px;
+    height: 36px;
+    margin: 2px;
+}
+
+.hot-content{
+    width: 255px;
+    float: left;
+}
+
+/************running-condition**********/
+#running-condition{
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+#running-title{
+    margin: 2px 0px;
+    padding: 3px;
+    color: aliceblue;
+    background-color: rgb(194, 201, 250);
+}
+
+#statistics{
+    margin: 2px 0px;
+    padding: 5px;
+    background-color: rgb(228, 231, 255);
+}
+
+.name{
+    width: 80px;
+    float: left;
+    color: darkgrey;
+    text-align: right;
+}
+
+.value{
+    margin-left: 5px;
+    float: left;
+    font-weight: bold;
+}
+
+#scoreboard{
+    margin: 2px 0px;
+    background-color: rgb(228, 231, 255);
+}
+
+#scoreboard ul{
+    margin: 0px;
+    padding: 10px;
+}
+
+#scoreboard li{
+    list-style: none;
+}
+
+#scoreboard a{
+    font-size: 90%;
+    color: black;
+    text-decoration: none;
+}
+
+/**********************************footer*******************************/
+#footer{
+    width: 1000px;
+    height: 120px;
+    margin: 0 auto;
+    background-color: rgb(218, 223, 255);
+}
+
+#footer-content{
+    height: 120px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+#links{
+    margin-top: 10px;
+    position: absolute;
+}
+
+#links ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#links li{  
+    float: left;
+    margin-right: 20px;
+
+}
+
+#copyright p{
+    margin: 0;
+}
+
+#update-date{
+    position: absolute;
+    right: 0;
+    bottom: 0%;
+    /* float: right;
+    margin-right: 10px; */
+}
+
+/*********************************uilities***************************/
+a{
+    color: black;
+}
+
+#nav a{
+    color: black;
+    text-decoration: none;
+}
+
+/* 由于id选择器对导航栏中的文字作了黑色处理，此处也需要加上#nav使类选择器变为id选择器提高优先级才有效果*/
+#nav .current-active{
+    padding: 3px;
+    color: aliceblue;
+    background-color: rgb(53, 126, 221);
+    border-radius: 4px;
+}
+
+.align-right{
+    text-align: right;
+}
+
+.v-center{
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+}
+
+.h-center{
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.clear-fix{
+    *zoom: 1;
+}
+
+.clear-fix::after{
+    content: ".";
+    display: block;
+    clear: both;
+
+    height: 0;
+    visibility: hidden;
+}
