@@ -55,4 +55,12 @@ $(function(){
         position:{my:"left+30 center",at:"right center"}
     });
 
+    $.post("indexServlet",{infor:"user"},function(data){
+        console.log(data);
+    });
+
+    $.post("indexServlet",{infor:"topic"},function(data){
+        console.log(data);
+    });
+
 });
