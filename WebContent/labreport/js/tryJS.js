@@ -55,12 +55,50 @@ $(function(){
         position:{my:"left+30 center",at:"right center"}
     });
 
-    $.post("indexServlet",{infor:"user"},function(data){
-        console.log(data);
-    });
+    function createPost(name,avatar,os,title,like){
+        var postDIV = '<div id="post" class="post clear-fix">'+
+                        '<div id="avatar" class="avatar">'+
+                            '<img src="'+avatar+'" alt="">'+
+                        '</div>'+
+                        '<div class="post-content">'+
+                            '<dic class="post-title" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dolor magni quasi.">'+
+                                title+'</dic>'+
+                            '<div class="post-infor">'+
+                                os + ' ' + name + ' 分钟前 回复来自ID23333 <span class="reply-count">' + like + '</span>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'
+        $("#posts").append(postDIV);
+    }
 
-    $.post("indexServlet",{infor:"topic"},function(data){
-        console.log(data);
+    $(function (){
+        var users = new Array();
+        var topics = new Array();
+
+        $.post("indexServlet",{infor:"user"},function(data){
+            users = data;
+            $.post("indexServlet",{infor:"topic"},function(data){
+                topics = data[0];
+                console.log(users);
+                console.log(topics);
+                // 当user以及topic都返回以后再进行显示
+                var title = topics["title"];
+                var like = topics["likes"];
+                console.log(title+" "+like)
+                for(var i=0;i<users.length;i++){
+                    var user = users[i];
+                    var name = user["name"];
+                    var avatar = user["avatar"];
+                    var os = user["os"];
+                    console.log(name);
+                    createPost(name,avatar,os,title,like);
+                }
+            },"json");
+        },"json");
+    
+        
+        
+        
     });
 
 });
