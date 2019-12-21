@@ -25,24 +25,71 @@ public class LabReportDAO {
 		}
 	}
 	
+	public void addUser(User user) {
+		String username = user.getName();
+		String password = user.getPassword();
+		if(username==null||password==null) {
+			return;
+		}
+		String sql = "insert into user values(?,?,?,?,?,?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, user.getName());
+			statement.setString(2, user.getAvatar());
+			statement.setString(3, user.getOS());
+			statement.setString(4, user.getMark());
+			statement.setString(5, user.getPassword());
+			statement.setString(6, user.getEmail());
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isUserExists(String username) {
+		boolean isExist = false;
+		int count = 0;
+		String sql = "select count(*) from user where name=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			ResultSet set = statement.executeQuery();
+			if(set.next()) {
+				count = Integer.parseInt(set.getString("count(*)"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(count!=0) {
+			isExist = true;
+		}
+		return isExist;
+	}
+	
 	public User getUser(String name) {
 		String avatar = null;
 		String OS = null;
 		String mark = null;
+		String password = null;
+		String email = null;
 		String sql = "select * from user where name=?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, name);
 			ResultSet rs = statement.executeQuery();
+			//当数据库没有对应用户名的用户时返回空
 			while(rs.next()) {
 				avatar = rs.getString("avatar");
 				OS = rs.getString("OS");
 				mark = rs.getString("mark");
+				password = rs.getString("password");
+				email= rs.getString("email");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return new User(name,avatar,OS,mark);
+		return new User(name,password,avatar,OS,mark,email);
 	}
 	
 	public ArrayList<User> getAllUsers(){

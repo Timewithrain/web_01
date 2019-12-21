@@ -90,6 +90,25 @@
       <url-pattern>/labreport/indexServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+      <servlet-name>LabReportLoginServlet</servlet-name>
+      <servlet-class>com.labreport.servlet.LoginServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>LabReportLoginServlet</servlet-name>
+      <url-pattern>/labreport/loginServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>LabReportRegisterServlet</servlet-name>
+      <servlet-class>com.labreport.servlet.RegisterServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>LabReportRegisterServlet</servlet-name>
+      <url-pattern>/labreport/registerServlet</url-pattern>
+  </servlet-mapping>
   
 
 </web-app>

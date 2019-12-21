@@ -16,7 +16,32 @@ $(function(){
         hide: {effect:"slideUp",duration:"normal"},
         buttons:{
             登录:function(){
-                $("#login-dialog").dialog("close");
+                $.ajax({
+                    url:  "loginServlet",
+                    type: "post",
+                    data: {
+                        "username": $("#login-username").val(),
+                        "password": $("#login-password").val()
+                    },
+                    success:function(data){
+                        var re = data;
+                        if(re.charAt(0)=="0"){
+                            alert("用户名不存在");
+                        }else if(re.charAt(0)=="1"){
+                            alert("用户名与密码不匹配");
+                        }else if(re.length>3){
+                            console.log(re);
+                            console.log(re.length);
+                            var name = data;
+                            var login = $("#login");
+                            login.empty();
+                            login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
+                            '<a href="#" id="bnt-signout">退出</a>');
+                            $("#login-dialog").dialog("close");
+                        }
+                    },
+                    dataType: "text",
+                });
             },
             取消:function(){
                 $("#login-dialog").dialog("close");
@@ -35,7 +60,20 @@ $(function(){
         autoOpen: false,
         buttons:{
             注册:function(){
-                $("#register-dialog").dialog("close");
+                //发送注册请求
+                $.post("registerServlet",{
+                    "username": $("#register-username").val(),
+                    "email": $("#register-email").val(),
+                    "password": $("#register-password").val(),
+                    "check-password": $("#register-check-password").val()
+                },function(data){
+                    $("#register-dialog").dialog("close")
+                    console.log(data);
+                    //当返回信息为0提示错误信息
+                    if(data==0){
+                        alert("信息错误！");
+                    }
+                },"text");
             },
             取消:function(){
                 $("#register-dialog").dialog("close");
