@@ -110,5 +110,15 @@
       <url-pattern>/labreport/registerServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+      <servlet-name>LabReportExitServlet</servlet-name>
+      <servlet-class>com.labreport.servlet.ExitServlet</servlet-class>    
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>LabReportExitServlet</servlet-name>
+      <url-pattern>/labreport/exit</url-pattern>
+  </servlet-mapping>
+  
 
 </web-app>

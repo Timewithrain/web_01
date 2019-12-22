@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.labreport.bean.Comment;
 import com.labreport.bean.Topic;
 import com.labreport.bean.User;
 
@@ -127,6 +128,14 @@ public class LabReportDAO {
 			e.printStackTrace();
 		}
 		return topics;
+	}
+	
+	public Comment getComment() {
+		String topicName;
+		String comment;
+		String userName;
+		
+		return new Comment(topicName, comment, userName);
 	}
 	
 	public void close() {
