@@ -130,12 +130,25 @@ public class LabReportDAO {
 		return topics;
 	}
 	
-	public Comment getComment() {
-		String topicName;
-		String comment;
-		String userName;
-		
-		return new Comment(topicName, comment, userName);
+	public ArrayList<Comment> getAllComments() {
+		ArrayList comments = new ArrayList<Comment>();
+		String topicName = null;
+		String comment = null;
+		String userName = null;
+		String sql = "select * from comment";
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				topicName = rs.getString("topicname");
+				comment = rs.getString("comment");
+				userName = rs.getString("username");
+				comments.add(new Comment(topicName,comment,userName));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return comments;
 	}
 	
 	public void close() {
