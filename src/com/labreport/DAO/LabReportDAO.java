@@ -93,6 +93,21 @@ public class LabReportDAO {
 		return new User(name,password,avatar,OS,mark,email);
 	}
 	
+	public void addTopic(Topic topic) {
+		String sql = "insert into topic values(?,?,?,?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, topic.getTopicName());
+			statement.setString(2, topic.getTitle());
+			statement.setInt(3, topic.getLikes());
+			statement.setString(4, topic.getPosterName());
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		ArrayList<User> users = new ArrayList<User>();
 		String sql = "select * from user";
@@ -122,7 +137,8 @@ public class LabReportDAO {
 				String name = rs.getString("topicname");
 				String title = rs.getString("title");
 				int likes = rs.getInt("likes");
-				topics.add(new Topic(name,title,likes));
+				String posterName = rs.getString("poster");
+				topics.add(new Topic(name,title,likes,posterName));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

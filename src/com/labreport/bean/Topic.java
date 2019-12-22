@@ -4,11 +4,21 @@ public class Topic {
 	private String topicName;
 	private String title;
 	private int likes;
+	private String posterName;
 	
+
 	public Topic(String topicName,String title,int likes) {
 		this.topicName = topicName;
 		this.title = title;
 		this.likes = likes;				
+	}
+	
+	public Topic(String topicName, String title, int likes, String posterName) {
+		super();
+		this.topicName = topicName;
+		this.title = title;
+		this.likes = likes;
+		this.posterName = posterName;
 	}
 
 	public String getTopicName() {
@@ -33,6 +43,14 @@ public class Topic {
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+	
+	public String getPosterName() {
+		return posterName;
+	}
+
+	public void setPosterName(String posterName) {
+		this.posterName = posterName;
 	}
 	
 }
