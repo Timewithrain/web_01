@@ -39,11 +39,12 @@ public class IndexServlet extends HttpServlet {
 	
 	//过滤avatar为空的用户,不将其返回至前端
 	public ArrayList<User> userFilter(ArrayList<User> users){
-		Iterator ite = users.iterator();
+		Iterator<User> ite = users.iterator();
 		while(ite.hasNext()) {
 			User user = (User)ite.next();
+			//单线程时使用此方式避免抛出ConcurrentModificationException异常
 			if(user.getAvatar()==null) {
-				users.remove(user);
+				ite.remove();
 			}
 		}		
 		return users;

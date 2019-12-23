@@ -41,10 +41,12 @@ $(function(){
                             //添加发帖按钮
                             $("#nav").append('<a href="#" class="do-post">发帖</a>');
                             // 添加评论按钮
-                            var count = $("reply-count");
-                            for(var i=0;i<count.length;i++){
-                                count[i].before('<a href="#" class="do-comment">评论</a>');
-                            }
+                            $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
+                            // var count = $(".reply-count");
+                            // for(var i=0;i<count.length;i++){
+                            //     console.log(count[i]);
+                            //     count[i].before('<a href="#" class="do-comment">评论</a>');
+                            // }
                             $("#login-dialog").dialog("close");
                         }
                     },
