@@ -63,6 +63,7 @@ body{
     width: 695px;
     height: 450px;
     float: left;
+    overflow: auto;
 }
 
 #nav{
@@ -76,7 +77,14 @@ body{
     list-style: none;
 }
 
+.do-post{
+    float: right;
+    margin-right: 10px;
+    color: #4348d6;
+}
+
 #posts{
+    height: 600px;
     margin-top: 5px;
     overflow: hidden;
 }
@@ -104,7 +112,7 @@ body{
 }
 
 .post-content{
-    width: 635px;
+    width: 610px;
     float: left;
     /* display: inline; */
 }
@@ -115,11 +123,17 @@ body{
     overflow: hidden;
 }
 
+.do-comment{
+    margin-left: 15px;
+    font-size: 15px;
+    text-decoration: none;
+}
+
 .reply-count{
-    font-size: 70%;
+    font-size: 80%;
     float: right;
     padding: 0px 3px;
-    margin-right: 15px;
+    margin-right: 5px;
     border-radius: 12px;
     color: aliceblue;
     background-color: darkslateblue;
@@ -225,6 +239,7 @@ body{
     width: 1000px;
     height: 120px;
     margin: 0 auto;
+    bottom: 0%;
     background-color: rgb(218, 223, 255);
 }
 

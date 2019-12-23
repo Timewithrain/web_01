@@ -34,9 +34,17 @@ $(function(){
                             console.log(re.length);
                             var name = data;
                             var login = $("#login");
+                            //修改登录按钮
                             login.empty();
                             login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
                             '<a href="#" id="bnt-signout">退出</a>');
+                            //添加发帖按钮
+                            $("#nav").append('<a href="#" class="do-post">发帖</a>');
+                            // 添加评论按钮
+                            var count = $("reply-count");
+                            for(var i=0;i<count.length;i++){
+                                count[i].before('<a href="#" class="do-comment">评论</a>');
+                            }
                             $("#login-dialog").dialog("close");
                         }
                     },
@@ -122,13 +130,11 @@ $(function(){
                 // 当user以及topic都返回以后再进行显示
                 var title = topics["title"];
                 var like = topics["likes"];
-                console.log(title+" "+like)
                 for(var i=0;i<users.length;i++){
                     var user = users[i];
                     var name = user["name"];
                     var avatar = user["avatar"];
                     var os = user["os"];
-                    console.log(name);
                     createPost(name,avatar,os,title,like);
                 }
             },"json");

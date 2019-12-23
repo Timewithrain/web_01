@@ -2,6 +2,7 @@ package com.labreport.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +30,23 @@ public class IndexServlet extends HttpServlet {
 	
 	public void getUser(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
 		ArrayList<User> users = labreportDAO.getAllUsers();
+		users = userFilter(users);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(users);
 		response.setCharacterEncoding("utf-8");
 		response.getWriter().println(json);
+	}
+	
+	//过滤avatar为空的用户,不将其返回至前端
+	public ArrayList<User> userFilter(ArrayList<User> users){
+		Iterator ite = users.iterator();
+		while(ite.hasNext()) {
+			User user = (User)ite.next();
+			if(user.getAvatar()==null) {
+				users.remove(user);
+			}
+		}		
+		return users;
 	}
 	
 	public void getTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
@@ -51,13 +65,13 @@ public class IndexServlet extends HttpServlet {
 		response.getWriter().println(json);
 	}
 	
-	public void post(HttpServletRequest request,HttpServletResponse response) {
+	//添加帖子
+	public void addPost(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) {
 		String topicName = request.getParameter("topicName");
 		String title = request.getParameter("title");
 		int likes = Integer.parseInt(request.getParameter("likes"));
 		String posterName = (String)request.getSession().getAttribute("LoginStatus");
 		Topic topic = new Topic(topicName,title,likes,posterName);
-		LabReportDAO labreportDAO = new LabReportDAO();
 		labreportDAO.addTopic(topic);
 		
 	}
