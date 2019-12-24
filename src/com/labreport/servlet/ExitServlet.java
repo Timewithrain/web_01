@@ -2,13 +2,14 @@ package com.labreport.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ExitServlet extends HttpServlet {
-	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		request.getSession().setAttribute("LoginStatus", null);
-		response.sendRedirect("labreport/index.html");
+	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+		request.getSession().setAttribute("loginStatus", null);
+		request.getRequestDispatcher("index.html").forward(request, response);
 	}
 }

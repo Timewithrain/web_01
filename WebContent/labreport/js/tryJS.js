@@ -30,8 +30,8 @@ $(function(){
                         }else if(re.charAt(0)=="1"){
                             alert("用户名与密码不匹配");
                         }else if(re.length>3){
-                            console.log(re);
-                            console.log(re.length);
+                            // console.log(re);
+                            // console.log(re.length);
                             var name = data;
                             var login = $("#login");
                             //修改登录按钮
@@ -42,11 +42,6 @@ $(function(){
                             $("#nav").append('<a href="#" class="do-post">发帖</a>');
                             // 添加评论按钮
                             $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
-                            // var count = $(".reply-count");
-                            // for(var i=0;i<count.length;i++){
-                            //     console.log(count[i]);
-                            //     count[i].before('<a href="#" class="do-comment">评论</a>');
-                            // }
                             $("#login-dialog").dialog("close");
                         }
                     },
@@ -95,6 +90,7 @@ $(function(){
         $("#register-dialog").dialog("open");
     });
 
+    //放大显示照片
     $(".avatar").tooltip({
         items: "img",
         content: function(){
@@ -103,6 +99,7 @@ $(function(){
         position:{my:"left+30 center",at:"right center"}
     });
 
+    //生成帖子
     function createPost(name,avatar,os,title,like){
         var postDIV = '<div id="post" class="post clear-fix">'+
                         '<div id="avatar" class="avatar">'+
@@ -119,6 +116,28 @@ $(function(){
         $("#posts").append(postDIV);
     }
 
+    // 获取登陆状态
+    function getLoginStatus(){
+        $.post("indexServlet",{infor:"loginStatus"},function(data){
+            //若未登录则返回notLogin，若登录则在页面显示登录信息
+            if($.trim(data)=="notLogin"){
+                return
+            }else{
+                var name = data;
+                var login = $("#login");
+                //修改登录按钮
+                login.empty();
+                login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
+                '<a href="#" id="bnt-signout">退出</a>');
+                //添加发帖按钮
+                $("#nav").append('<a href="#" class="do-post">发帖</a>');
+                // 添加评论按钮
+                $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
+            }
+        },"text");
+    }
+
+    //打开页面以后获取user以及topic
     $(function (){
         var users = new Array();
         var topics = new Array();
@@ -139,12 +158,17 @@ $(function(){
                     var os = user["os"];
                     createPost(name,avatar,os,title,like);
                 }
+                //加载帖子完成后获取登陆状态以显示评论按钮
+                getLoginStatus();
             },"json");
         },"json");
-    
-        
-        
-        
+    });
+
+    $("body").on("click","#bnt-signout",function(){
+        $.post("exit",function(){
+            //退出以后刷新页面
+            window.location.reload()
+        });
     });
 
 });

@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
 			//检验密码是否正确
 			if(password.equals(user.getPassword())) {
 				//设置登陆状态
-				request.setAttribute("LoginStatus", name);
+				request.getSession().setAttribute("loginStatus", name);
 				response.getWriter().println(name);
 			}else {
 				//密码错误时返回错误信息1

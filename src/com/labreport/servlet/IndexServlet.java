@@ -1,6 +1,7 @@
 package com.labreport.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -24,6 +25,8 @@ public class IndexServlet extends HttpServlet {
 			getTopic(request,response,labreportDAO);
 		}else if(infor.equals("comment")) {
 			getComment(request, response,labreportDAO);
+		}else if(infor.equals("loginStatus")) {
+			getLoginStatus(request, response,labreportDAO);
 		}
 		labreportDAO.close();
 	}
@@ -74,6 +77,18 @@ public class IndexServlet extends HttpServlet {
 		String posterName = (String)request.getSession().getAttribute("LoginStatus");
 		Topic topic = new Topic(topicName,title,likes,posterName);
 		labreportDAO.addTopic(topic);
+	}
+	
+	//获取登录信息，若未登录则返回notLogin，若登录则返回登录用户信息
+	public void getLoginStatus(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		String loginStatus = (String) request.getSession().getAttribute("loginStatus");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter writer = response.getWriter();
+		if(loginStatus==null) {
+			writer.println("notLogin");
+		}else {
+			writer.println(loginStatus);
+		}
 		
 	}
 	
