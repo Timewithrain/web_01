@@ -99,16 +99,16 @@ $(function(){
         position:{my:"left+30 center",at:"right center"}
     });
 
-    //生成帖子
-    function createPost(name,avatar,os,title,like){
-        var postDIV = '<div id="post" class="post clear-fix">'+
+    //生成评论
+    function createComment(name,avatar,os,title,like){
+        var postDIV = '<div id="comment" class="comment clear-fix">'+
                         '<div id="avatar" class="avatar">'+
                             '<img src="'+avatar+'" alt="">'+
                         '</div>'+
-                        '<div class="post-content">'+
-                            '<dic class="post-title" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dolor magni quasi.">'+
+                        '<div class="comment-content">'+
+                            '<dic class="comment-title" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dolor magni quasi.">'+
                                 title+'</dic>'+
-                            '<div class="post-infor">'+
+                            '<div class="comment-infor">'+
                                 os + ' ' + name + ' 分钟前 回复来自ID23333 <span class="reply-count">' + like + '</span>'+
                             '</div>'+
                         '</div>'+
@@ -138,31 +138,31 @@ $(function(){
     }
 
     //打开页面以后获取user以及topic
-    $(function (){
-        var users = new Array();
-        var topics = new Array();
+    // $(function (){
+    //     var users = new Array();
+    //     var topics = new Array();
 
-        $.post("indexServlet",{infor:"user"},function(data){
-            users = data;
-            $.post("indexServlet",{infor:"topic"},function(data){
-                topics = data[0];
-                console.log(users);
-                console.log(topics);
-                // 当user以及topic都返回以后再进行显示
-                var title = topics["title"];
-                var like = topics["likes"];
-                for(var i=0;i<users.length;i++){
-                    var user = users[i];
-                    var name = user["name"];
-                    var avatar = user["avatar"];
-                    var os = user["os"];
-                    createPost(name,avatar,os,title,like);
-                }
-                //加载帖子完成后获取登陆状态以显示评论按钮
-                getLoginStatus();
-            },"json");
-        },"json");
-    });
+    //     $.post("indexServlet",{infor:"user"},function(data){
+    //         users = data;
+    //         $.post("indexServlet",{infor:"topic"},function(data){
+    //             topics = data[0];
+    //             console.log(users);
+    //             console.log(topics);
+    //             // 当user以及topic都返回以后再进行显示
+    //             var title = topics["title"];
+    //             var like = topics["likes"];
+    //             for(var i=0;i<users.length;i++){
+    //                 var user = users[i];
+    //                 var name = user["name"];
+    //                 var avatar = user["avatar"];
+    //                 var os = user["os"];
+    //                 createComment(name,avatar,os,title,like);
+    //             }
+    //             //加载帖子完成后获取登陆状态以显示评论按钮
+    //             getLoginStatus();
+    //         },"json");
+    //     },"json");
+    // });
 
     $("body").on("click","#bnt-signout",function(){
         $.post("exit",function(){

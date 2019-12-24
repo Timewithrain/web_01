@@ -77,7 +77,7 @@ body{
     list-style: none;
 }
 
-/***********************发帖部分**********************/
+/***********************发帖栏部分**********************/
 .add-post{
     margin: 10px 0;
     padding-top: 10px;
@@ -134,7 +134,71 @@ body{
     overflow: hidden;
 }
 
+/********************************帖子部分**************************************/
+
 .post{
+    margin: 5px 0;
+    background-color: #bbc2f9;
+}
+
+.post-title > h3{
+    text-align: center;
+}
+
+.post-content{
+    width: 650px;
+    margin: 5px auto;
+}
+
+.post-content > p{
+    margin: 5px;
+}
+
+.post-infor{
+    margin:10px 5px;
+}
+
+.post-avatar{
+    margin-left: 20px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.post-avatar > img{
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+}
+
+.post-poster-name{
+    font-size: 17px;
+    margin-left: 10px;
+    bottom: 17px;
+    display: inline-block;
+    position: relative;
+}
+
+.do-comment-btn{
+    bottom: 22px;
+    position: relative;
+    display: inline-block;
+}
+
+.do-comment-btn > a{
+    color: #3469ce;
+}
+
+.likes{
+    top: 16px;
+    float: right;
+    margin-right: 20px;
+    position: relative;
+}
+
+
+/********************************评论部分*************************************/
+
+.comment{
     margin: 2px 0px;
     background-color: rgb(228, 231, 255);
 }
@@ -156,13 +220,13 @@ body{
     height: 150px;
 }
 
-.post-content{
+.comment-content{
     width: 610px;
     float: left;
     /* display: inline; */
 }
 
-.post-title{
+.comment-title{
     width: 300px;
     height: 30px;
     overflow: hidden;
