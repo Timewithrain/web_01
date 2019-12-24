@@ -90,33 +90,123 @@ $(function(){
         $("#register-dialog").dialog("open");
     });
 
-    //放大显示照片
-    $(".avatar").tooltip({
-        items: "img",
-        content: function(){
-            return "<img class='avatar-tooltip' src='" + $(this).attr('src') + "' alt='" + $(this).attr('alt') + "'>";
-        },
-        position:{my:"left+30 center",at:"right center"}
-    });
+    /****************************帖子页面函数***************************/
+
+    function createPost(title,content,avatar,userName,likes){
+        var postDIV = '<div class="post">'+
+                        '<div class="post-title">'+
+                            '<h3>'+title+'</h3>'+
+                        '</div>'+
+                        '<div class="post-content">'+
+                            '<p>'+content+'</p>'+
+                        '</div>'+
+                        '<div class="post-infor">'+
+                            '<div class="post-avatar">'+
+                                '<img src="'+avatar+'" alt="">'+
+                                '<div class="post-poster-name">'+
+                                    userName+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="do-comment-btn">'+
+                            '</div>'+
+                            '<div class="likes">'+
+                                '<span class="reply-count">'+likes+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+        $("#posts").append(postDIV);
+    }
+
+
+    /****************************评论页面函数**************************/
 
     //生成评论
-    function createComment(name,avatar,os,title,like){
-        var postDIV = '<div id="comment" class="comment clear-fix">'+
+    function createComment(name,avatar,os,comment,like){
+        var commentDIV = '<div id="comment" class="comment clear-fix">'+
                         '<div id="avatar" class="avatar">'+
                             '<img src="'+avatar+'" alt="">'+
                         '</div>'+
                         '<div class="comment-content">'+
                             '<dic class="comment-title" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dolor magni quasi.">'+
-                                title+'</dic>'+
+                                comment+'</dic>'+
                             '<div class="comment-infor">'+
                                 os + ' ' + name + ' 分钟前 回复来自ID23333 <span class="reply-count">' + like + '</span>'+
                             '</div>'+
                         '</div>'+
                     '</div>'
-        $("#posts").append(postDIV);
+        $("#posts").append(commentDIV);
     }
 
+    
+
+    /******************************发帖功能*********************************/
+    var isOpenPost = false;
+    $("#nav").on("click",".do-post",function(){
+        //检测发帖栏是否开启，若已开启则不再添加
+        if(isOpenPost==false){
+            var doPostDIV = '<div class="add-post">'+
+                                '<div class="post-head">'+
+                                    '<input type="text" name="" class="post-head-content" placeholder="此处输入标题">'+
+                                '</div>'+
+                                '<div class="post-body">'+
+                                    '<textarea name="" class="post-body-content" cols="30" rows="7" placeholder="此处输入帖子内容..."></textarea>'+
+                                '</div>'+
+                                '<div class="post-footer">'+
+                                    '<button class="post-button" id="post-cancel">取消</button>'+
+                                    '<button class="post-button" id="post-publish">发布</button>'+
+                                '</div>'+
+                            '</div>';
+            $("#posts .post:first-child").before(doPostDIV);
+            isOpenPost = true;
+        }
+    });
+
+    //为发帖按钮绑定点击提交帖子事件
+    $("#posts").on("click","#post-publish",function(){
+        var title = $(".post-head-content").val();
+        var content = $(".post-body-content").val();
+        if(title!=null&&content!=null){
+            $.post("indexServlet",{
+                infor: "doPost",
+                title: title,
+                content: content
+            },function(data){
+                window.location.reload();
+            },"json");
+        }else{
+            alert("发帖内容不能为空！");
+        }
+    });
+
+    //为取消按钮绑定点击取消事件，点击关闭发帖栏
+    $("#posts").on("click","#post-cancel",function(){
+        $(".add-post").remove();
+        isOpenPost = false;
+    });
+
+    /****************************页面刷新调用函数*******************************/
+
     // 获取登陆状态
+    // function getLoginStatus(){
+    //     $.post("indexServlet",{infor:"loginStatus"},function(data){
+    //         //若未登录则返回notLogin，若登录则在页面显示登录信息
+    //         if($.trim(data)=="notLogin"){
+    //             return
+    //         }else{
+    //             var name = data;
+    //             var login = $("#login");
+    //             //修改登录按钮
+    //             login.empty();
+    //             login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
+    //             '<a href="#" id="bnt-signout">退出</a>');
+    //             //添加发帖按钮
+    //             $("#nav").append('<a href="#" class="do-post">发帖</a>');
+    //             // 添加评论按钮
+    //             $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
+    //         }
+    //     },"text");
+    // }
+
     function getLoginStatus(){
         $.post("indexServlet",{infor:"loginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
@@ -132,10 +222,44 @@ $(function(){
                 //添加发帖按钮
                 $("#nav").append('<a href="#" class="do-post">发帖</a>');
                 // 添加评论按钮
-                $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
+                $(".do-comment-btn").append('<a href="#" class="do-comment">评论</a>');
             }
         },"text");
     }
+
+    //通过用户名获取头像
+    function getAvatar(userName,users){
+        for(var i=0;i<users.length;i++){
+            var user = users[i];
+            if(user["name"]==userName){
+                return user["avatar"];
+            }
+        }
+    }
+
+    $(function(){
+        var users = new Array();
+        var posts = new Array();
+        $.post("indexServlet",{infor: "user"},function(data){
+            users = data;
+            $.post("indexServlet",{infor :"topic"},function(data){
+                posts = data;
+                for(var i=0;i<posts.length;i++){
+                    var post = posts[i];
+                    var title = post["topicName"];
+                    var content = post["title"];
+                    var likes = post["likes"];
+                    var poster = post["posterName"];
+                    // console.log(post);
+                    // console.log(title);
+                    var avatar = getAvatar(poster,users);
+                    console.log(avatar);
+                    createPost(title,content,avatar,poster,likes);
+                }
+                getLoginStatus();
+            },"json");
+        },"json");
+    });
 
     //打开页面以后获取user以及topic
     // $(function (){
@@ -170,50 +294,14 @@ $(function(){
             window.location.reload();
         });
     });
-
-    ///////////////////////////////发帖功能/////////////////////////////////////
-    var isOpenPost = false;
-    $("#nav").on("click",".do-post",function(){
-        //检测发帖栏是否开启，若已开启则不再添加
-        if(isOpenPost==false){
-            var doPostDIV = '<div class="add-post">'+
-                                '<div class="post-head">'+
-                                    '<input type="text" name="" class="post-head-content" placeholder="此处输入标题">'+
-                                '</div>'+
-                                '<div class="post-body">'+
-                                    '<textarea name="" class="post-body-content" cols="30" rows="7" placeholder="此处输入帖子内容..."></textarea>'+
-                                '</div>'+
-                                '<div class="post-footer">'+
-                                    '<button class="post-button" id="post-cancel">取消</button>'+
-                                    '<button class="post-button" id="post-publish">发布</button>'+
-                                '</div>'+
-                            '</div>';
-            $("#posts #post:first-child").before(doPostDIV);
-            isOpenPost = true;
-        }
-    });
-
-    //为发帖按钮绑定点击提交帖子事件
-    $("#posts").on("click","#post-publish",function(){
-        var title = $(".post-head-content").val();
-        var content = $(".post-body-content").val();
-        if(title.value!=null&&content.value!=null){
-            $.post("indexServlet",{
-                infor: "doPost",
-                title: title,
-                content: content
-            },function(data){
-                window.location.reload();
-            },"json");
-        }else{
-            alert("发帖内容不能为空！");
-        }
-    });
-
-    //为取消按钮绑定点击取消事件，点击关闭发帖栏
-    $("#posts").on("click","#post-cancel",function(){
-        $(".add-post").remove();
-        isOpenPost = false;
+    
+    //放大显示照片
+    $(".avatar").tooltip({
+        items: "img",
+        content: function(){
+            return "<img class='avatar-tooltip' src='" + $(this).attr('src') + "' alt='" + $(this).attr('alt') + "'>";
+        },
+        position:{my:"left+30 center",at:"right center"}
     });
 
 });
