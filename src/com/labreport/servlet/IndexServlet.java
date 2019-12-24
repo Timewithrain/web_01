@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ import com.labreport.bean.Topic;
 import com.labreport.bean.User;
 
 public class IndexServlet extends HttpServlet {
-	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
 		LabReportDAO labreportDAO = new LabReportDAO();
 		String infor = request.getParameter("infor");
 		if(infor.equals("user")) {
@@ -27,6 +28,8 @@ public class IndexServlet extends HttpServlet {
 			getComment(request, response,labreportDAO);
 		}else if(infor.equals("loginStatus")) {
 			getLoginStatus(request, response,labreportDAO);
+		}else if(infor.equals("doPost")) {
+			publishPost(request, response, labreportDAO);
 		}
 		labreportDAO.close();
 	}
@@ -69,16 +72,6 @@ public class IndexServlet extends HttpServlet {
 		response.getWriter().println(json);
 	}
 	
-	//添加帖子
-	public void addPost(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) {
-		String topicName = request.getParameter("topicName");
-		String title = request.getParameter("title");
-		int likes = Integer.parseInt(request.getParameter("likes"));
-		String posterName = (String)request.getSession().getAttribute("LoginStatus");
-		Topic topic = new Topic(topicName,title,likes,posterName);
-		labreportDAO.addTopic(topic);
-	}
-	
 	//获取登录信息，若未登录则返回notLogin，若登录则返回登录用户信息
 	public void getLoginStatus(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
 		String loginStatus = (String) request.getSession().getAttribute("loginStatus");
@@ -89,6 +82,16 @@ public class IndexServlet extends HttpServlet {
 		}else {
 			writer.println(loginStatus);
 		}
+	}
+	
+	//
+	public void publishPost(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws ServletException, IOException {
+		String titleName = request.getParameter("title");
+		String content = request.getParameter("content");
+		String poster = (String) request.getSession().getAttribute("loginStatus");
+		Topic topic = new Topic(titleName,content,0,poster);
+		labreportDAO.addTopic(topic);
+		request.getRequestDispatcher("index.html").forward(request, response);
 		
 	}
 	

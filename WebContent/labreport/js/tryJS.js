@@ -167,8 +167,53 @@ $(function(){
     $("body").on("click","#bnt-signout",function(){
         $.post("exit",function(){
             //退出以后刷新页面
-            window.location.reload()
+            window.location.reload();
         });
+    });
+
+    ///////////////////////////////发帖功能/////////////////////////////////////
+    var isOpenPost = false;
+    $("#nav").on("click",".do-post",function(){
+        //检测发帖栏是否开启，若已开启则不再添加
+        if(isOpenPost==false){
+            var doPostDIV = '<div class="add-post">'+
+                                '<div class="post-head">'+
+                                    '<input type="text" name="" class="post-head-content" placeholder="此处输入标题">'+
+                                '</div>'+
+                                '<div class="post-body">'+
+                                    '<textarea name="" class="post-body-content" cols="30" rows="7" placeholder="此处输入帖子内容..."></textarea>'+
+                                '</div>'+
+                                '<div class="post-footer">'+
+                                    '<button class="post-button" id="post-cancel">取消</button>'+
+                                    '<button class="post-button" id="post-publish">发布</button>'+
+                                '</div>'+
+                            '</div>';
+            $("#posts #post:first-child").before(doPostDIV);
+            isOpenPost = true;
+        }
+    });
+
+    //为发帖按钮绑定点击提交帖子事件
+    $("#posts").on("click","#post-publish",function(){
+        var title = $(".post-head-content").val();
+        var content = $(".post-body-content").val();
+        if(title.value!=null&&content.value!=null){
+            $.post("indexServlet",{
+                infor: "doPost",
+                title: title,
+                content: content
+            },function(data){
+                window.location.reload();
+            },"json");
+        }else{
+            alert("发帖内容不能为空！");
+        }
+    });
+
+    //为取消按钮绑定点击取消事件，点击关闭发帖栏
+    $("#posts").on("click","#post-cancel",function(){
+        $(".add-post").remove();
+        isOpenPost = false;
     });
 
 });

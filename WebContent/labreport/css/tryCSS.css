@@ -77,6 +77,51 @@ body{
     list-style: none;
 }
 
+/***********************发帖部分**********************/
+.add-post{
+    margin: 10px 0;
+    padding-top: 10px;
+    background-color: #bac4ea;
+}
+
+.post-head{
+    width: 650px;
+    margin: 0 auto;
+}
+
+.post-head-content{
+    width: 640px;
+    height: 25px;
+    margin: 0 auto;
+}
+
+.post-body-content{
+    width: 640px;
+    height: 120px;
+    padding: 1px;
+    margin: 5px 14px;
+    resize: none;
+    overflow: auto;
+}
+
+.post-footer{
+    padding-bottom: 5px;
+    overflow: auto;
+}
+
+.post-button{
+    margin: 0 10px;
+    float: right;
+    border-radius: 10px;
+    font-size: 17px;
+    color: mediumslateblue;
+    background-color: aliceblue;
+}
+
+#post-cancel{
+    margin-right: 20px;
+}
+
 .do-post{
     float: right;
     margin-right: 10px;
