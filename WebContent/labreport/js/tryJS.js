@@ -159,7 +159,7 @@ $(function(){
                             '<dic class="comment-title" title="'+comment+'">'+
                                 comment+'</dic>'+
                             '<div class="comment-infor">'+
-                                os + ' ' + name + ' 分钟前 回复来自ID23333 <span class="reply-count">' + like + '</span>'+
+                                os + ' ' + name + ' 回复 <span class="reply-count">' + like + '</span>'+
                             '</div>'+
                         '</div>'+
                     '</div>'
@@ -195,7 +195,7 @@ $(function(){
             title: h3.innerHTML
         },function(data){
             comments = data;
-            $(".post").remove();
+            $("#posts").empty();
             showCommentArea();
             for(var i=0;i<comments.length;i++){
                 var comment = comments[i];
@@ -226,8 +226,11 @@ $(function(){
                                     '<button class="post-button" id="post-publish">发布</button>'+
                                 '</div>'+
                             '</div>';
-            $("#posts .post:first-child").before(doPostDIV);
-            isOpenPost = true;
+            var postarea = $("#posts .post:first-child")[0];
+            if(postarea!=null){
+                $("#posts .post:first-child").before(doPostDIV);
+                isOpenPost = true;
+            }
         }
     });
 
@@ -257,32 +260,34 @@ $(function(){
     /****************************页面刷新调用函数*******************************/
 
     function getLoginStatus(){
-        $.post("indexServlet",{infor:"loginStatus"},function(data){
+        $.post("indexServlet",{infor: "loginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
-            if($.trim(data)=="notLogin"){
+            if($.trim(data["infor"])=="notLogin"){
                 return
             }else{
-                var name = data;
+                var name = data["infor"];
                 var login = $("#login");
                 //修改登录按钮
                 login.empty();
                 login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
                 '<a href="#" id="bnt-signout">退出</a>');
                 //添加发帖按钮
-                $(".do-post").remove();
-                $("#nav").append('<a href="#" class="do-post">发帖</a>');
+                var postbtn = $(".do-post")[0];
+                if(postbtn==null){
+                    $("#nav").append('<a href="#" class="do-post">发帖</a>');
+                }
                 // 添加评论按钮
                 $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
             }
-        },"text");
+        },"json");
         $.post("indexServlet",{
             infor: "getInfor"
         },function(data){
             var infor = data;
             console.log(infor);
-            var userNum = infor[0];
-            var topicNum = infor[1];
-            var commentNum = infor[2];
+            var userNum = infor["userNum"];
+            var topicNum = infor["topicNum"];
+            var commentNum = infor["commentNum"];
             $(".user-value")[0].innerHTML = userNum;
             $(".topic-value")[0].innerHTML = topicNum;
             $(".comment-value")[0].innerHTML = commentNum;
@@ -291,6 +296,7 @@ $(function(){
 
     //获取user以及topic
     function start(){
+        isOpenPost = false;
         $.post("indexServlet",{infor: "user"},function(data){
             users = data;
             $.post("indexServlet",{infor :"topic"},function(data){
@@ -313,8 +319,7 @@ $(function(){
     $(start());
 
     $("#nav").on("click",".return-post",function(){
-        $("#posts").remove();
-        $("#center").append('<div id="posts"></div>');
+        $("#posts").empty();
         start();
     });
 

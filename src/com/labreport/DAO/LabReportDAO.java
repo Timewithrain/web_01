@@ -251,6 +251,18 @@ public class LabReportDAO {
 		return num;
 	}
 	
+	public void updateTopic(Topic topic) {
+		String sql = "update topic set title=? where topicname=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, topic.getTitle());
+			statement.setString(2, topic.getTopicName());
+			statement.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void close() {
 		try {
 			if(statement!=null) {

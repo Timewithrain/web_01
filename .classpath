@@ -21,9 +21,9 @@
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/jackson-annotations-2.9.8-sources.jar"/>
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-beanutils-1.8.0.jar"/>
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-logging-1.1.1 (1).jar"/>
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/ezmorph-1.0.6.jar"/>
 	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="D:/Programs/JAVA/workspace/web_1/WebContent/WEB-INF/lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

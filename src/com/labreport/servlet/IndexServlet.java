@@ -36,7 +36,9 @@ public class IndexServlet extends HttpServlet {
 			addPost(request, response, labreportDAO);
 		}else if(infor.equals("addComment")) {
 			addComment(request, response, labreportDAO);
-		} 
+		}else if(infor.equals("updateTopic")) {
+			
+		}
 		labreportDAO.close();
 	}
 	
@@ -93,11 +95,13 @@ public class IndexServlet extends HttpServlet {
 		String loginStatus = (String) request.getSession().getAttribute("loginStatus");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter writer = response.getWriter();
+		String str = null;
 		if(loginStatus==null) {
-			writer.println("notLogin");
+			str = "{'infor':'notLogin'}";
 		}else {
-			writer.println(loginStatus);
+			str = "{'infor':'"+loginStatus+"'}";
 		}
+		writer.println(JSONObject.fromObject(str));
 	}
 	
 	//向数据库添加帖子
@@ -114,19 +118,18 @@ public class IndexServlet extends HttpServlet {
 		int userNum = labreportDAO.getNumOfUsers();
 		int topicNum = labreportDAO.getNumOfTopic();
 		int commentNum = labreportDAO.getNumOfComment();
-//		String str = "{'userNum':"+userNum+",'topicNum':"+topicNum+",'commentNum':"+commentNum+"}";
-//		JSONObject jsonMaker = JSONObject.fromObject(str);
-//		jsonMaker.put("userNum", userNum);
-//		jsonMaker.put("topicNum", topicNum);
-//		jsonMaker.put("commentNum", commentNum);
-//		ArrayList<Integer> infor = new ArrayList<Integer>();
-//		infor.add(userNum);
-//		infor.add(topicNum);
-//		infor.add(commentNum);
-		int[] infor = {userNum,topicNum,commentNum};
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(infor);
+		String str = "{'userNum':"+userNum+",'topicNum':"+topicNum+",'commentNum':"+commentNum+"}";
+		JSONObject json = JSONObject.fromObject(str);
+//		int[] infor = {userNum,topicNum,commentNum};
+//		ObjectMapper mapper = new ObjectMapper();
+//		String json = mapper.writeValueAsString(infor);
 		response.getWriter().println(json);
+	}
+	
+	public void updateTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) {
+		String title = request.getParameter("topicname");
+		String content = request.getParameter("title");
+		labreportDAO.updateTopic(new Topic(title,content,0));
 	}
 	
 }
