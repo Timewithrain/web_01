@@ -41,7 +41,8 @@ $(function(){
                             //修改登录按钮
                             login.empty();
                             login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
-                            '<a href="#" id="bnt-signout">退出</a>');
+                            '<a href="#" id="bnt-signout">退出</a>'+
+                            '<a href="#" class="my-post">我的发帖</a>');
                             //添加发帖按钮
                             $("#nav").append('<a href="#" class="do-post">发帖</a>');
                             // 添加评论按钮
@@ -270,7 +271,8 @@ $(function(){
                 //修改登录按钮
                 login.empty();
                 login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
-                '<a href="#" id="bnt-signout">退出</a>');
+                '<a href="#" id="bnt-signout">退出</a>'+
+                '<a href="#" class="my-post">我的发帖</a>');
                 //添加发帖按钮
                 var postbtn = $(".do-post")[0];
                 if(postbtn==null){
@@ -337,6 +339,40 @@ $(function(){
             return "<img class='avatar-tooltip' src='" + $(this).attr('src') + "' alt='" + $(this).attr('alt') + "'>";
         },
         position:{my:"left+30 center",at:"right center"}
+    });
+    
+    /*****************************显示可修改帖子*****************************/
+    function createEditPost(title,content){
+        var postDIV = '<div class="post">'+
+                        '<div class="post-title">'+
+                            '<h3>'+title+'</h3>'+
+                        '</div>'+
+                        '<div class="post-content">'+
+                            '<p>'+content+'</p>'+
+                        '</div>'+
+                        '<div class="post-edit-infor">'+
+                            '<div class="do-edit-btn">'+
+                                '<a href="#" class="do-edit">修改</a>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+        console.log(title);
+        $("#posts").append(postDIV);
+    }
+
+    $("#login").on("click",".my-post",function(){
+        $.post("indexServlet",{
+            infor: "getTopics"
+        },function(data){
+            $("#posts").empty();
+            console.log(data);
+            for(var i=0;i<data.length;i++){
+                var topic = data[i];
+                var title = topic["topicName"];
+                var content = topic["title"];
+                createEditPost(title,content);
+            }
+        },"json");
     });
 
 });

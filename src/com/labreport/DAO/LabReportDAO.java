@@ -161,6 +161,26 @@ public class LabReportDAO {
 		return topics;
 	}
 	
+	//根据发帖人的用户名获取其对应的帖子
+	public ArrayList<Topic> getTopics(String poster){
+		ArrayList<Topic> topics = new ArrayList<Topic>();
+		String sql = "select * from topic where poster=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, poster);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String title = rs.getString("topicname");
+				String content = rs.getString("title");
+				int likes = rs.getInt("likes");
+				topics.add(new Topic(title,content,likes,poster));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return topics;
+	}
+	
 	public ArrayList<Comment> getComments(String title){
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		String comment = null;

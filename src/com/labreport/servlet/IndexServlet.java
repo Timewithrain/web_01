@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labreport.DAO.LabReportDAO;
 import com.labreport.bean.Comment;
@@ -36,8 +37,10 @@ public class IndexServlet extends HttpServlet {
 			addPost(request, response, labreportDAO);
 		}else if(infor.equals("addComment")) {
 			addComment(request, response, labreportDAO);
+		}else if(infor.equals("getTopics")){
+			getTopics(request, response, labreportDAO);
 		}else if(infor.equals("updateTopic")) {
-			
+				updateTopic(request, response, labreportDAO);
 		}
 		labreportDAO.close();
 	}
@@ -124,6 +127,19 @@ public class IndexServlet extends HttpServlet {
 //		ObjectMapper mapper = new ObjectMapper();
 //		String json = mapper.writeValueAsString(infor);
 		response.getWriter().println(json);
+	}
+	
+	public void getTopics(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws JsonProcessingException {
+		String poster = (String) request.getSession().getAttribute("loginStatus");
+		ArrayList<Topic> topics = labreportDAO.getTopics(poster);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(topics);
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().println(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void updateTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) {

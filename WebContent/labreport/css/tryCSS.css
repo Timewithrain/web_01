@@ -48,6 +48,16 @@ body{
     height: 480px;
 }
 
+.my-post{
+    width: 70px;
+    height: 20px;
+    top: 24px;
+    right: -5px;
+    position: absolute;
+    color: #7070da;
+    font-size: 13px;
+}
+
 /********************************section*******************************/
 
 #section{
@@ -136,6 +146,17 @@ body{
     height: 550px;
     margin-top: 5px;
     overflow: auto;
+}
+
+/***********************修改帖子部分*****************************/
+.post-edit-infor{
+    overflow: auto;
+}
+.do-edit-btn{
+    margin: 10px 30px;
+    float: right;
+    display: inline-block;
+    text-decoration: none;;
 }
 
 /*******************************评论栏部分***************************************/
