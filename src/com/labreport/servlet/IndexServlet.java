@@ -64,8 +64,10 @@ public class IndexServlet extends HttpServlet {
 		response.getWriter().println(json);
 	}
 	
+	//根据前端传回的title返回对应帖子的评论
 	public void getComment(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
-		ArrayList<Comment> comments = labreportDAO.getAllComments();
+		String title = request.getParameter("title");
+		ArrayList<Comment> comments = labreportDAO.getComments(title);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(comments);
 		response.setCharacterEncoding("utf-8");

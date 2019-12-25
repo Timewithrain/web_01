@@ -146,11 +146,34 @@ public class LabReportDAO {
 		return topics;
 	}
 	
+	public ArrayList<Comment> getComments(String title){
+		ArrayList<Comment> comments = new ArrayList<Comment>();
+		String comment = null;
+		String userName = null;
+		int likes = 0;
+		String sql = "select * from comment where topicname=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, title);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				comment = rs.getString("comment");
+				userName = rs.getString("username");
+				likes = rs.getInt("likes");
+				comments.add(new Comment(title,comment,userName,likes));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return comments;
+	}
+	
 	public ArrayList<Comment> getAllComments() {
 		ArrayList comments = new ArrayList<Comment>();
 		String topicName = null;
 		String comment = null;
 		String userName = null;
+		int likes = 0;
 		String sql = "select * from comment";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -159,7 +182,8 @@ public class LabReportDAO {
 				topicName = rs.getString("topicname");
 				comment = rs.getString("comment");
 				userName = rs.getString("username");
-				comments.add(new Comment(topicName,comment,userName));
+				likes = rs.getInt("likes");
+				comments.add(new Comment(topicName,comment,userName,likes));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

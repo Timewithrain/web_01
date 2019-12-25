@@ -52,7 +52,7 @@ body{
 
 #section{
     width: 1000px;
-    height: 450px;
+    height: 600px;
     margin: 0 auto;
     /* background-color: deepskyblue; */
 }
@@ -61,9 +61,8 @@ body{
 
 #center{
     width: 695px;
-    height: 450px;
+    height: 550px;
     float: left;
-    overflow: auto;
 }
 
 #nav{
@@ -129,9 +128,9 @@ body{
 }
 
 #posts{
-    height: 600px;
+    height: 550px;
     margin-top: 5px;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /********************************帖子部分**************************************/
@@ -233,7 +232,7 @@ body{
 }
 
 .do-comment{
-    margin-left: 15px;
+    margin: 0 15px;
     font-size: 15px;
     text-decoration: none;
 }
@@ -246,6 +245,8 @@ body{
     border-radius: 12px;
     color: aliceblue;
     background-color: darkslateblue;
+    top: 3px;
+    position: relative;
 }
 
 /*******************side*********************/

@@ -1,5 +1,8 @@
 $(function(){
-    
+    var users = new Array();
+    var posts = new Array();
+    var comments = new Array();
+
     $("#login-dialog").dialog({
         title: "用户登录",
         width: 380,
@@ -41,7 +44,7 @@ $(function(){
                             //添加发帖按钮
                             $("#nav").append('<a href="#" class="do-post">发帖</a>');
                             // 添加评论按钮
-                            $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
+                            $(".do-comment-btn").append('<a href="#" class="do-comment">评论</a>');
                             $("#login-dialog").dialog("close");
                         }
                     },
@@ -90,6 +93,18 @@ $(function(){
         $("#register-dialog").dialog("open");
     });
 
+    /****************************辅助功能函数****************************/
+
+    //通过用户名获取头像
+    function getUserAttr(userName,attribute,users){
+        for(var i=0;i<users.length;i++){
+            var user = users[i];
+            if(user["name"]==userName){
+                return user[attribute];
+            }
+        }
+    }
+
     /****************************帖子页面函数***************************/
 
     function createPost(title,content,avatar,userName,likes){
@@ -127,7 +142,7 @@ $(function(){
                             '<img src="'+avatar+'" alt="">'+
                         '</div>'+
                         '<div class="comment-content">'+
-                            '<dic class="comment-title" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dolor magni quasi.">'+
+                            '<dic class="comment-title" title="'+comment+'">'+
                                 comment+'</dic>'+
                             '<div class="comment-infor">'+
                                 os + ' ' + name + ' 分钟前 回复来自ID23333 <span class="reply-count">' + like + '</span>'+
@@ -136,6 +151,28 @@ $(function(){
                     '</div>'
         $("#posts").append(commentDIV);
     }
+
+    $("body").on("click",".do-comment",function(){
+        // var self = $(event.target).;
+        var aim = $(event.target).parents(".post").children();
+        var h3 = aim.children()[0];
+        $.post("indexServlet",{
+            infor: "comment",
+            title: h3.innerHTML
+        },function(data){
+            comments = data;
+            $(".post").remove();
+            for(var i=0;i<comments.length;i++){
+                var comment = comments[i];
+                var commentContent = comment["comment"];
+                var name = comment["userName"];
+                var likes = comment["likes"];
+                var avatar = getUserAttr(name,"avatar",users);
+                var os = getUserAttr(name,"OS",users);
+                createComment(name,avatar,os,commentContent,likes);
+            }
+        },"json");
+    });
 
     
 
@@ -227,19 +264,8 @@ $(function(){
         },"text");
     }
 
-    //通过用户名获取头像
-    function getAvatar(userName,users){
-        for(var i=0;i<users.length;i++){
-            var user = users[i];
-            if(user["name"]==userName){
-                return user["avatar"];
-            }
-        }
-    }
-
+    //获取user以及topic
     $(function(){
-        var users = new Array();
-        var posts = new Array();
         $.post("indexServlet",{infor: "user"},function(data){
             users = data;
             $.post("indexServlet",{infor :"topic"},function(data){
@@ -252,8 +278,7 @@ $(function(){
                     var poster = post["posterName"];
                     // console.log(post);
                     // console.log(title);
-                    var avatar = getAvatar(poster,users);
-                    console.log(avatar);
+                    var avatar = getUserAttr(poster,"avatar",users);
                     createPost(title,content,avatar,poster,likes);
                 }
                 getLoginStatus();
