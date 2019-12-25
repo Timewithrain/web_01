@@ -108,6 +108,21 @@ public class LabReportDAO {
 		}
 	}
 	
+	public void addComment(Comment comment) {
+		String sql = "insert into comment values(?,?,?,?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, comment.getTopicName());
+			statement.setString(2, comment.getComment());
+			statement.setString(3, comment.getUserName());
+			statement.setInt(4, comment.getLikes());
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		ArrayList<User> users = new ArrayList<User>();
 		String sql = "select * from user";
@@ -189,6 +204,51 @@ public class LabReportDAO {
 			e.printStackTrace();
 		}
 		return comments;
+	}
+	
+	public int getNumOfUsers() {
+		int num = 0;
+		String sql = "select count(*) from user";
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				num = rs.getInt("count(*)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
+	}
+	
+	public int getNumOfTopic() {
+		int num = 0;
+		String sql = "select count(*) from topic";
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				num = rs.getInt("count(*)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
+	}
+	
+	public int getNumOfComment() {
+		int num = 0;
+		String sql = "select count(*) from comment";
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				num = rs.getInt("count(*)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
 	}
 	
 	public void close() {

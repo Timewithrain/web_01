@@ -127,9 +127,34 @@ body{
     color: #4348d6;
 }
 
+.return-post{
+    float: right;
+    margin-right: 10px;
+}
+
 #posts{
     height: 550px;
     margin-top: 5px;
+    overflow: auto;
+}
+
+/*******************************评论栏部分***************************************/
+.add-comment{
+    background-color: #adc6fd;
+    overflow: hidden;
+}
+
+.comment-body{
+    margin-top: 15px;
+}
+
+.comment-body-content{
+    width: 660px;
+    height: 100px;
+    padding: 1px;
+    margin: 5px auto;
+    display: block;
+    resize: none;
     overflow: auto;
 }
 
@@ -314,6 +339,7 @@ body{
 .name{
     width: 80px;
     float: left;
+    margin-right: 5px;
     color: darkgrey;
     text-align: right;
 }

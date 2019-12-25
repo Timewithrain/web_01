@@ -2,6 +2,7 @@ $(function(){
     var users = new Array();
     var posts = new Array();
     var comments = new Array();
+    var titleForComment;
 
     $("#login-dialog").dialog({
         title: "用户登录",
@@ -44,7 +45,7 @@ $(function(){
                             //添加发帖按钮
                             $("#nav").append('<a href="#" class="do-post">发帖</a>');
                             // 添加评论按钮
-                            $(".do-comment-btn").append('<a href="#" class="do-comment">评论</a>');
+                            $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
                             $("#login-dialog").dialog("close");
                         }
                     },
@@ -135,6 +136,19 @@ $(function(){
 
     /****************************评论页面函数**************************/
 
+    //显示评论栏
+    function showCommentArea(){
+        var commentAreaDIV = '<div class="add-comment">'+
+                                '<div class="comment-body">'+
+                                    '<textarea name="" class="comment-body-content" cols="30" rows="7" placeholder="此处输入评论内容..."></textarea>'+
+                                '</div>'+
+                                '<div class="post-footer">'+
+                                    '<button class="post-button" id="comment-publish">评论</button>'+
+                                '</div>'+
+                            '</div>';
+        $("#posts").append(commentAreaDIV);
+    }
+
     //生成评论
     function createComment(name,avatar,os,comment,like){
         var commentDIV = '<div id="comment" class="comment clear-fix">'+
@@ -152,16 +166,37 @@ $(function(){
         $("#posts").append(commentDIV);
     }
 
+    //传入评论的帖子的标题，为按钮绑定提交功能，准备提交
+    $("#posts").on("click","#comment-publish",function(){
+        var comment = $(".comment-body-content").val();
+        var title = titleForComment;
+        console.log(title);
+        if(comment!=null){
+            $.post("indexServlet",{
+                infor: "addComment",
+                title: title,
+                comment: comment
+            },function(data){
+                window.location.reload();
+            },"json");
+        }else{
+            alert("评论内容不能为空！");
+        }
+    });
+
     $("body").on("click",".do-comment",function(){
-        // var self = $(event.target).;
+        //获取评论按钮对应的帖子的标题
         var aim = $(event.target).parents(".post").children();
         var h3 = aim.children()[0];
+        titleForComment = h3.innerHTML;
+        console.log(titleForComment);
         $.post("indexServlet",{
             infor: "comment",
             title: h3.innerHTML
         },function(data){
             comments = data;
             $(".post").remove();
+            showCommentArea();
             for(var i=0;i<comments.length;i++){
                 var comment = comments[i];
                 var commentContent = comment["comment"];
@@ -173,8 +208,6 @@ $(function(){
             }
         },"json");
     });
-
-    
 
     /******************************发帖功能*********************************/
     var isOpenPost = false;
@@ -223,27 +256,6 @@ $(function(){
 
     /****************************页面刷新调用函数*******************************/
 
-    // 获取登陆状态
-    // function getLoginStatus(){
-    //     $.post("indexServlet",{infor:"loginStatus"},function(data){
-    //         //若未登录则返回notLogin，若登录则在页面显示登录信息
-    //         if($.trim(data)=="notLogin"){
-    //             return
-    //         }else{
-    //             var name = data;
-    //             var login = $("#login");
-    //             //修改登录按钮
-    //             login.empty();
-    //             login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
-    //             '<a href="#" id="bnt-signout">退出</a>');
-    //             //添加发帖按钮
-    //             $("#nav").append('<a href="#" class="do-post">发帖</a>');
-    //             // 添加评论按钮
-    //             $(".reply-count").before('<a href="#" class="do-comment">评论</a>');
-    //         }
-    //     },"text");
-    // }
-
     function getLoginStatus(){
         $.post("indexServlet",{infor:"loginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
@@ -257,15 +269,28 @@ $(function(){
                 login.append('<a href="#" id="bnt-login">'+name+'</a> | '+
                 '<a href="#" id="bnt-signout">退出</a>');
                 //添加发帖按钮
+                $(".do-post").remove();
                 $("#nav").append('<a href="#" class="do-post">发帖</a>');
                 // 添加评论按钮
-                $(".do-comment-btn").append('<a href="#" class="do-comment">评论</a>');
+                $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
             }
         },"text");
+        $.post("indexServlet",{
+            infor: "getInfor"
+        },function(data){
+            var infor = data;
+            console.log(infor);
+            var userNum = infor[0];
+            var topicNum = infor[1];
+            var commentNum = infor[2];
+            $(".user-value")[0].innerHTML = userNum;
+            $(".topic-value")[0].innerHTML = topicNum;
+            $(".comment-value")[0].innerHTML = commentNum;
+        },"json");
     }
 
     //获取user以及topic
-    $(function(){
+    function start(){
         $.post("indexServlet",{infor: "user"},function(data){
             users = data;
             $.post("indexServlet",{infor :"topic"},function(data){
@@ -284,34 +309,14 @@ $(function(){
                 getLoginStatus();
             },"json");
         },"json");
+    }
+    $(start());
+
+    $("#nav").on("click",".return-post",function(){
+        $("#posts").remove();
+        $("#center").append('<div id="posts"></div>');
+        start();
     });
-
-    //打开页面以后获取user以及topic
-    // $(function (){
-    //     var users = new Array();
-    //     var topics = new Array();
-
-    //     $.post("indexServlet",{infor:"user"},function(data){
-    //         users = data;
-    //         $.post("indexServlet",{infor:"topic"},function(data){
-    //             topics = data[0];
-    //             console.log(users);
-    //             console.log(topics);
-    //             // 当user以及topic都返回以后再进行显示
-    //             var title = topics["title"];
-    //             var like = topics["likes"];
-    //             for(var i=0;i<users.length;i++){
-    //                 var user = users[i];
-    //                 var name = user["name"];
-    //                 var avatar = user["avatar"];
-    //                 var os = user["os"];
-    //                 createComment(name,avatar,os,title,like);
-    //             }
-    //             //加载帖子完成后获取登陆状态以显示评论按钮
-    //             getLoginStatus();
-    //         },"json");
-    //     },"json");
-    // });
 
     $("body").on("click","#bnt-signout",function(){
         $.post("exit",function(){

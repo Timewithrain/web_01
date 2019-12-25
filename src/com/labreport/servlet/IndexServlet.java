@@ -16,21 +16,27 @@ import com.labreport.bean.Comment;
 import com.labreport.bean.Topic;
 import com.labreport.bean.User;
 
+import net.sf.json.JSONObject;
+
 public class IndexServlet extends HttpServlet {
 	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
 		LabReportDAO labreportDAO = new LabReportDAO();
 		String infor = request.getParameter("infor");
-		if(infor.equals("user")) {
-			getUser(request,response,labreportDAO);
-		}else if(infor.equals("topic")){
-			getTopic(request,response,labreportDAO);
-		}else if(infor.equals("comment")) {
-			getComment(request, response,labreportDAO);
+		if(infor.equals("getInfor")) {
+			getInfor(request, response, labreportDAO);
 		}else if(infor.equals("loginStatus")) {
 			getLoginStatus(request, response,labreportDAO);
+		}else if(infor.equals("user")) {
+			getUser(request,response,labreportDAO);
+		}else if(infor.equals("comment")) {
+			getComment(request, response,labreportDAO);
+		}else if(infor.equals("topic")){
+			getTopic(request,response,labreportDAO);
 		}else if(infor.equals("doPost")) {
-			publishPost(request, response, labreportDAO);
-		}
+			addPost(request, response, labreportDAO);
+		}else if(infor.equals("addComment")) {
+			addComment(request, response, labreportDAO);
+		} 
 		labreportDAO.close();
 	}
 	
@@ -74,6 +80,14 @@ public class IndexServlet extends HttpServlet {
 		response.getWriter().println(json);
 	}
 	
+	public void addComment(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException{
+		String title = request.getParameter("title");
+		String comment = request.getParameter("comment");
+		String username = (String) request.getSession().getAttribute("loginStatus");
+		labreportDAO.addComment(new Comment(title,comment,username,0));
+		response.getWriter().println("0");
+	}
+	
 	//获取登录信息，若未登录则返回notLogin，若登录则返回登录用户信息
 	public void getLoginStatus(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
 		String loginStatus = (String) request.getSession().getAttribute("loginStatus");
@@ -86,15 +100,33 @@ public class IndexServlet extends HttpServlet {
 		}
 	}
 	
-	//
-	public void publishPost(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws ServletException, IOException {
+	//向数据库添加帖子
+	public void addPost(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws ServletException, IOException {
 		String titleName = request.getParameter("title");
 		String content = request.getParameter("content");
 		String poster = (String) request.getSession().getAttribute("loginStatus");
 		Topic topic = new Topic(titleName,content,0,poster);
 		labreportDAO.addTopic(topic);
 		request.getRequestDispatcher("index.html").forward(request, response);
-		
+	}
+	
+	public void getInfor(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		int userNum = labreportDAO.getNumOfUsers();
+		int topicNum = labreportDAO.getNumOfTopic();
+		int commentNum = labreportDAO.getNumOfComment();
+//		String str = "{'userNum':"+userNum+",'topicNum':"+topicNum+",'commentNum':"+commentNum+"}";
+//		JSONObject jsonMaker = JSONObject.fromObject(str);
+//		jsonMaker.put("userNum", userNum);
+//		jsonMaker.put("topicNum", topicNum);
+//		jsonMaker.put("commentNum", commentNum);
+//		ArrayList<Integer> infor = new ArrayList<Integer>();
+//		infor.add(userNum);
+//		infor.add(topicNum);
+//		infor.add(commentNum);
+		int[] infor = {userNum,topicNum,commentNum};
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(infor);
+		response.getWriter().println(json);
 	}
 	
 }
