@@ -102,7 +102,12 @@ $(function(){
         for(var i=0;i<users.length;i++){
             var user = users[i];
             if(user["name"]==userName){
-                return user[attribute];
+                //当用户没有头像时加载默认图像作为头像
+                if(attribute=="avatar"&&user[attribute]==null){
+                    return "img/default.jpg";
+                }else{
+                    return user[attribute];
+                }
             }
         }
     }
@@ -172,7 +177,7 @@ $(function(){
         var comment = $(".comment-body-content").val();
         var title = titleForComment;
         console.log(comment);
-        if(comment!=null){
+        if(comment!=""){
             $.post("indexServlet",{
                 infor: "addComment",
                 title: title,
@@ -192,7 +197,7 @@ $(function(){
         titleForComment = h3.innerHTML;
         console.log(titleForComment);
         $.post("indexServlet",{
-            infor: "comment",
+            infor: "getComment",
             title: h3.innerHTML
         },function(data){
             comments = data;
@@ -239,9 +244,9 @@ $(function(){
     $("#posts").on("click","#post-publish",function(){
         var title = $(".post-head-content").val();
         var content = $(".post-body-content").val();
-        if(title!=null&&content!=null){
+        if(title!=""&&content!=""){
             $.post("indexServlet",{
-                infor: "doPost",
+                infor: "addPost",
                 title: title,
                 content: content
             },function(data){
@@ -261,7 +266,7 @@ $(function(){
     /****************************页面刷新调用函数*******************************/
 
     function getLoginStatus(){
-        $.post("indexServlet",{infor: "loginStatus"},function(data){
+        $.post("indexServlet",{infor: "getLoginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
             if($.trim(data["infor"])=="notLogin"){
                 return
@@ -298,9 +303,9 @@ $(function(){
     //获取user以及topic
     function start(){
         isOpenPost = false;
-        $.post("indexServlet",{infor: "user"},function(data){
+        $.post("indexServlet",{infor: "getUser"},function(data){
             users = data;
-            $.post("indexServlet",{infor :"topic"},function(data){
+            $.post("indexServlet",{infor: "getTopic"},function(data){
                 posts = data;
                 for(var i=0;i<posts.length;i++){
                     var post = posts[i];
@@ -402,17 +407,30 @@ $(function(){
         var h3 = $(".post-title").children()[0];
         var title = h3.innerHTML;
         var content = $(".post-edit-content").val();
-        if(content!=null){
+        if(content!=""){
             $.post("indexServlet",{
                 infor: "updateTopic",
                 title: title,
                 content: content
             },function(data){
+                window.location.reload();
             },"json");
         }else{
             alert("修改内容不能为空！");
         }
-        window.location.reload();
+    });
+
+    /*******************************删除帖子***********************************/
+    $("#posts").on("click",".do-delete",function(){
+        var posttitle = $(event.target).closest(".post").children();
+        var h3 = posttitle.children()[0];
+        var title = h3.innerHTML;
+        $.post("indexServlet",{
+            infor: "deleteTopic",
+            title: title
+        },function(data){
+            window.location.reload();
+        },"json");
     });
 
 });

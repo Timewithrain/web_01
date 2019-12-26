@@ -284,6 +284,18 @@ public class LabReportDAO {
 		}
 	}
 	
+	public void deleteTopic(String title) {
+		String sql = "delete from topic where topicname=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, title);
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void close() {
 		try {
 			if(statement!=null) {

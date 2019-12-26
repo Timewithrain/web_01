@@ -2,6 +2,8 @@ package com.labreport.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -23,31 +25,39 @@ public class IndexServlet extends HttpServlet {
 	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
 		LabReportDAO labreportDAO = new LabReportDAO();
 		String infor = request.getParameter("infor");
-		if(infor.equals("getInfor")) {
-			getInfor(request, response, labreportDAO);
-		}else if(infor.equals("loginStatus")) {
-			getLoginStatus(request, response,labreportDAO);
-		}else if(infor.equals("user")) {
-			getUser(request,response,labreportDAO);
-		}else if(infor.equals("comment")) {
-			getComment(request, response,labreportDAO);
-		}else if(infor.equals("topic")){
-			getTopic(request,response,labreportDAO);
-		}else if(infor.equals("doPost")) {
-			addPost(request, response, labreportDAO);
-		}else if(infor.equals("addComment")) {
-			addComment(request, response, labreportDAO);
-		}else if(infor.equals("getTopics")){
-			getTopics(request, response, labreportDAO);
-		}else if(infor.equals("updateTopic")) {
-				updateTopic(request, response, labreportDAO);
+//		if(infor.equals("getInfor")) {
+//			getInfor(request, response, labreportDAO);
+//		}else if(infor.equals("getLoginStatus")) {
+//			getLoginStatus(request, response,labreportDAO);
+//		}else if(infor.equals("getUser")) {
+//			getUser(request,response,labreportDAO);
+//		}else if(infor.equals("getComment")) {
+//			getComment(request, response,labreportDAO);
+//		}else if(infor.equals("getTopic")){
+//			getTopic(request,response,labreportDAO);
+//		}else if(infor.equals("addPost")) {
+//			addPost(request, response, labreportDAO);
+//		}else if(infor.equals("addComment")) {
+//			addComment(request, response, labreportDAO);
+//		}else if(infor.equals("getTopics")){
+//			getTopics(request, response, labreportDAO);
+//		}else if(infor.equals("updateTopic")) {
+//			updateTopic(request, response, labreportDAO);
+//		}else if(infor.equals("deleteTopic")) {
+//			deleteTopic(request, response, labreportDAO);
+//		}
+		try {
+			Method method = getClass().getDeclaredMethod(infor, HttpServletRequest.class,HttpServletResponse.class,LabReportDAO.class);
+			method.invoke(this,request,response,labreportDAO);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
 		}
 		labreportDAO.close();
 	}
 	
 	public void getUser(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
 		ArrayList<User> users = labreportDAO.getAllUsers();
-		users = userFilter(users);
+//		users = userFilter(users);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(users);
 		response.setCharacterEncoding("utf-8");
@@ -114,7 +124,7 @@ public class IndexServlet extends HttpServlet {
 		String poster = (String) request.getSession().getAttribute("loginStatus");
 		Topic topic = new Topic(titleName,content,0,poster);
 		labreportDAO.addTopic(topic);
-		request.getRequestDispatcher("index.html").forward(request, response);
+		response.getWriter().println("0");
 	}
 	
 	public void getInfor(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
@@ -123,9 +133,6 @@ public class IndexServlet extends HttpServlet {
 		int commentNum = labreportDAO.getNumOfComment();
 		String str = "{'userNum':"+userNum+",'topicNum':"+topicNum+",'commentNum':"+commentNum+"}";
 		JSONObject json = JSONObject.fromObject(str);
-//		int[] infor = {userNum,topicNum,commentNum};
-//		ObjectMapper mapper = new ObjectMapper();
-//		String json = mapper.writeValueAsString(infor);
 		response.getWriter().println(json);
 	}
 	
@@ -146,6 +153,12 @@ public class IndexServlet extends HttpServlet {
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
 		labreportDAO.updateTopic(new Topic(title,content,0));
+		response.getWriter().println("0");
+	}
+	
+	public void deleteTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		String title = request.getParameter("title");
+		labreportDAO.deleteTopic(title);
 		response.getWriter().println("0");
 	}
 	

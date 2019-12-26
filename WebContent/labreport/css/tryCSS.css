@@ -467,7 +467,7 @@ a{
 }
 
 /* 由于id选择器对导航栏中的文字作了黑色处理，此处也需要加上#nav使类选择器变为id选择器提高优先级才有效果*/
-#nav .current-active{
+#nav .current-active:hover{
     padding: 3px;
     color: aliceblue;
     background-color: rgb(53, 126, 221);
