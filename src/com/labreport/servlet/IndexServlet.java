@@ -25,27 +25,6 @@ public class IndexServlet extends HttpServlet {
 	public void service(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
 		LabReportDAO labreportDAO = new LabReportDAO();
 		String infor = request.getParameter("infor");
-//		if(infor.equals("getInfor")) {
-//			getInfor(request, response, labreportDAO);
-//		}else if(infor.equals("getLoginStatus")) {
-//			getLoginStatus(request, response,labreportDAO);
-//		}else if(infor.equals("getUser")) {
-//			getUser(request,response,labreportDAO);
-//		}else if(infor.equals("getComment")) {
-//			getComment(request, response,labreportDAO);
-//		}else if(infor.equals("getTopic")){
-//			getTopic(request,response,labreportDAO);
-//		}else if(infor.equals("addPost")) {
-//			addPost(request, response, labreportDAO);
-//		}else if(infor.equals("addComment")) {
-//			addComment(request, response, labreportDAO);
-//		}else if(infor.equals("getTopics")){
-//			getTopics(request, response, labreportDAO);
-//		}else if(infor.equals("updateTopic")) {
-//			updateTopic(request, response, labreportDAO);
-//		}else if(infor.equals("deleteTopic")) {
-//			deleteTopic(request, response, labreportDAO);
-//		}
 		try {
 			Method method = getClass().getDeclaredMethod(infor, HttpServletRequest.class,HttpServletResponse.class,LabReportDAO.class);
 			method.invoke(this,request,response,labreportDAO);
@@ -57,7 +36,6 @@ public class IndexServlet extends HttpServlet {
 	
 	public void getUser(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
 		ArrayList<User> users = labreportDAO.getAllUsers();
-//		users = userFilter(users);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(users);
 		response.setCharacterEncoding("utf-8");

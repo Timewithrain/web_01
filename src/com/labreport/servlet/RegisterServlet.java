@@ -15,17 +15,21 @@ public class RegisterServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String checkPwd = request.getParameter("check-password");
-		if(checkPwd.equals(password)) {
-			User user = new User();
-			user.setName(name);
-			user.setPassword(password);
-			user.setEmail(email);
-			LabReportDAO labreportDAO = new LabReportDAO();
-			labreportDAO.addUser(user);
-			response.getWriter().println("OK");
+		LabReportDAO labreportDAO = new LabReportDAO();
+		if(!labreportDAO.isUserExists(name)) {
+			if(checkPwd.equals(password)) {
+				User user = new User();
+				user.setName(name);
+				user.setPassword(password);
+				user.setEmail(email);
+				labreportDAO.addUser(user);
+				response.getWriter().println("OK");
+			}else {
+				//当密码与验证密码不匹配时返回错误信息
+				response.getWriter().println("pwdError");
+			}
 		}else {
-			//当密码与验证密码不匹配时返回错误信息
-			response.getWriter().println("0");
+			response.getWriter().println("userExist");
 		}
 	}
 }

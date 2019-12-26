@@ -44,8 +44,16 @@ body{
 }
 
 #register-dialog{
-    width: 760px;
-    height: 480px;
+    width: 800px;
+    height: 500px;
+}
+
+.error{
+    font-size: 12px;
+    margin: 0px;
+    float: left;
+    color: red;
+    display: block;
 }
 
 .my-post{

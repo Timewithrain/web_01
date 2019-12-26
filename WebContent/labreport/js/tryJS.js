@@ -7,7 +7,7 @@ $(function(){
     $("#login-dialog").dialog({
         title: "用户登录",
         width: 380,
-        height: 240,
+        height: 260,
         autoOpen: false,
         // 设置定位为登录按钮右下角打开登录框
         position: {my:"right top",of:"#bnt-login",at:"right bottom"},
@@ -20,22 +20,27 @@ $(function(){
         hide: {effect:"slideUp",duration:"normal"},
         buttons:{
             登录:function(){
+                var username = $("#login-username").val();
+                if(username==""){
+                    $(".error-box3").append('<p class="error">用户不能为空</p>');
+                    return;
+                }
                 $.ajax({
                     url:  "loginServlet",
                     type: "post",
                     data: {
-                        "username": $("#login-username").val(),
+                        "username": username,
                         "password": $("#login-password").val()
                     },
                     success:function(data){
-                        var re = data;
-                        if(re.charAt(0)=="0"){
-                            alert("用户名不存在");
-                        }else if(re.charAt(0)=="1"){
-                            alert("用户名与密码不匹配");
-                        }else if(re.length>3){
-                            // console.log(re);
-                            // console.log(re.length);
+                        $(".error-box3").empty();
+                        $(".error-box4").empty();
+                        var re = $.trim(data);
+                        if(re=="0"){
+                            $(".error-box3").append('<p class="error">用户不存在</p>');
+                        }else if(re=="1"){
+                            $(".error-box4").append('<p class="error">密码错误</p>');
+                        }else {
                             var name = data;
                             var login = $("#login");
                             //修改登录按钮
@@ -54,6 +59,8 @@ $(function(){
                 });
             },
             取消:function(){
+                $(".error-box3").empty();
+                $(".error-box4").empty();
                 $("#login-dialog").dialog("close");
             }
         }
@@ -66,26 +73,42 @@ $(function(){
     $("#register-dialog").dialog({
         title: "用户注册",
         width: 390,
-        height: 260,
+        height: 300,
         autoOpen: false,
         buttons:{
             注册:function(){
+                $(".error-box1").empty();
+                $(".error-box2").empty();
+                var username = $("#register-username").val();
+                var email = $("#register-email").val();
+                var password = $("#register-password").val();
+                var checkPassword = $("#register-check-password").val();
+                if(username==""){
+                    $(".error-box1").append('<p class="error">用户名不能为空</p>');
+                    return
+                }
+                if(password!=checkPassword){
+                    $(".error-box2").append('<p class="error">密码不一致</p>');
+                    return;
+                }
                 //发送注册请求
                 $.post("registerServlet",{
-                    "username": $("#register-username").val(),
-                    "email": $("#register-email").val(),
-                    "password": $("#register-password").val(),
-                    "check-password": $("#register-check-password").val()
+                    "username": username,
+                    "email": email,
+                    "password": password,
+                    "check-password": checkPassword
                 },function(data){
-                    $("#register-dialog").dialog("close")
-                    console.log(data);
-                    //当返回信息为0提示错误信息
-                    if(data==0){
-                        alert("信息错误！");
+                    var str = $.trim(data);
+                    if(str=="OK"){
+                        $("#register-dialog").dialog("close")
+                    }else if(str=="userExist"){
+                        $(".error-box1").append('<p class="error">用户已存在</p>');
                     }
                 },"text");
             },
             取消:function(){
+                $(".error-box1").empty();
+                $(".error-box2").empty();
                 $("#register-dialog").dialog("close");
             }
         }        
