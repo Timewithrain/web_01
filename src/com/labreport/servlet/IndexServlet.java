@@ -142,10 +142,11 @@ public class IndexServlet extends HttpServlet {
 		}
 	}
 	
-	public void updateTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) {
-		String title = request.getParameter("topicname");
-		String content = request.getParameter("title");
+	public void updateTopic(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
 		labreportDAO.updateTopic(new Topic(title,content,0));
+		response.getWriter().println("0");
 	}
 	
 }

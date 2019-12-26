@@ -159,6 +159,25 @@ body{
     text-decoration: none;;
 }
 
+.do-edit{
+    margin: 3px;
+    text-decoration: none;
+}
+
+.do-delete{
+    margin: 3px;
+    text-decoration: none;
+}
+
+.post-edit-content{
+    width: 640px;
+    height: 160px;
+    padding: 1px;
+    margin: 5px 14px;
+    resize: none;
+    overflow: auto;
+}
+
 /*******************************评论栏部分***************************************/
 .add-comment{
     background-color: #adc6fd;
@@ -187,6 +206,7 @@ body{
 }
 
 .post-title > h3{
+    margin: 3px auto;
     text-align: center;
 }
 

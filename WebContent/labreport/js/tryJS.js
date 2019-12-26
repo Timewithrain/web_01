@@ -171,7 +171,7 @@ $(function(){
     $("#posts").on("click","#comment-publish",function(){
         var comment = $(".comment-body-content").val();
         var title = titleForComment;
-        console.log(title);
+        console.log(comment);
         if(comment!=null){
             $.post("indexServlet",{
                 infor: "addComment",
@@ -286,7 +286,6 @@ $(function(){
             infor: "getInfor"
         },function(data){
             var infor = data;
-            console.log(infor);
             var userNum = infor["userNum"];
             var topicNum = infor["topicNum"];
             var commentNum = infor["commentNum"];
@@ -309,8 +308,6 @@ $(function(){
                     var content = post["title"];
                     var likes = post["likes"];
                     var poster = post["posterName"];
-                    // console.log(post);
-                    // console.log(title);
                     var avatar = getUserAttr(poster,"avatar",users);
                     createPost(title,content,avatar,poster,likes);
                 }
@@ -341,7 +338,8 @@ $(function(){
         position:{my:"left+30 center",at:"right center"}
     });
     
-    /*****************************显示可修改帖子*****************************/
+    /*****************************修改发帖*****************************/
+    //显示可修改的帖子
     function createEditPost(title,content){
         var postDIV = '<div class="post">'+
                         '<div class="post-title">'+
@@ -353,10 +351,10 @@ $(function(){
                         '<div class="post-edit-infor">'+
                             '<div class="do-edit-btn">'+
                                 '<a href="#" class="do-edit">修改</a>'+
+                                '<a href="#" class="do-delete">删除</a>'+
                             '</div>'+
                         '</div>'+
                     '</div>';
-        console.log(title);
         $("#posts").append(postDIV);
     }
 
@@ -365,7 +363,6 @@ $(function(){
             infor: "getTopics"
         },function(data){
             $("#posts").empty();
-            console.log(data);
             for(var i=0;i<data.length;i++){
                 var topic = data[i];
                 var title = topic["topicName"];
@@ -373,6 +370,49 @@ $(function(){
                 createEditPost(title,content);
             }
         },"json");
+    });
+
+    //进入帖子修改页面
+    function editPost(title,content){
+        var editDIV = '<div class="add-post">'+
+                            '<div class="post-title">'+
+                                '<h3>'+title+'</h3>'+
+                            '</div>'+
+                            '<div class="post-edit-body">'+
+                                '<textarea name="" class="post-edit-content" cols="30" rows="7">'+content+'</textarea>'+
+                            '</div>'+
+                            '<div class="post-footer">'+
+                                '<button class="post-button" id="post-cancel">取消</button>'+
+                                '<button class="post-button" id="post-edit">发布</button>'+
+                            '</div>'+
+                        '</div>';
+        $("#posts").append(editDIV);
+    }
+
+    $("#posts").on("click",".do-edit",function(){
+        var postcontent = $(event.target).parents(".post").children();
+        var p = postcontent.children()[1];
+        var posttitle = $(event.target).parents(".post").children();
+        var h3 = posttitle.children()[0];
+        $("#posts").empty();
+        editPost(h3.innerHTML,p.innerHTML);
+    })
+
+    $("#posts").on("click","#post-edit",function(){
+        var h3 = $(".post-title").children()[0];
+        var title = h3.innerHTML;
+        var content = $(".post-edit-content").val();
+        if(content!=null){
+            $.post("indexServlet",{
+                infor: "updateTopic",
+                title: title,
+                content: content
+            },function(data){
+            },"json");
+        }else{
+            alert("修改内容不能为空！");
+        }
+        window.location.reload();
     });
 
 });

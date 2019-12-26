@@ -277,7 +277,8 @@ public class LabReportDAO {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, topic.getTitle());
 			statement.setString(2, topic.getTopicName());
-			statement.executeQuery();
+			statement.execute();
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
