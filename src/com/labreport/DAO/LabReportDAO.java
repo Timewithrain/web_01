@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.labreport.bean.Comment;
+import com.labreport.bean.Praise;
 import com.labreport.bean.Topic;
 import com.labreport.bean.User;
 
@@ -226,6 +227,25 @@ public class LabReportDAO {
 		return comments;
 	}
 	
+	public ArrayList<Topic> getTopicOrder(){
+		ArrayList<Topic> topics = new ArrayList<Topic>();
+		String sql = "select * from topic order by likes desc";
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String title = rs.getString("topicname");
+				String content = rs.getString("title");
+				int likes = rs.getInt("likes");
+				String poster = rs.getString("poster");
+				topics.add(new Topic(title,content,likes,poster));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return topics;		
+	}
+	
 	public int getNumOfUsers() {
 		int num = 0;
 		String sql = "select count(*) from user";
@@ -294,6 +314,40 @@ public class LabReportDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void addPraise(Praise p) {
+		String sql = "insert into praise values(?,?,?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, p.getTopicname());
+			statement.setString(2, p.getUsername());
+			statement.setBoolean(3, p.isPraise());
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Praise> getPraise(String username) {
+		ArrayList<Praise> praises = new ArrayList<Praise>();
+		String sql = "select * from praise where username=?";
+		String title = null;
+		boolean praise = false;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				title = rs.getString("topicname");
+				praise = rs.getBoolean("praise");
+				praises.add(new Praise(username, title, praise));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return praises;
 	}
 	
 	public void close() {

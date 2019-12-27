@@ -16,8 +16,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labreport.DAO.LabReportDAO;
 import com.labreport.bean.Comment;
+import com.labreport.bean.Praise;
 import com.labreport.bean.Topic;
 import com.labreport.bean.User;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import net.sf.json.JSONObject;
 
@@ -138,6 +140,30 @@ public class IndexServlet extends HttpServlet {
 		String title = request.getParameter("title");
 		labreportDAO.deleteTopic(title);
 		response.getWriter().println("0");
+	}
+	
+	public void getTopicOrder(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		ArrayList<Topic> topics = labreportDAO.getTopicOrder();
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(topics);
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().println(json);
+	}
+	
+	public void addPraise(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		String name = (String) request.getSession().getAttribute("loginStatus");
+		String title = request.getParameter("title");
+		labreportDAO.addPraise(new Praise(name, title, true));
+		response.getWriter().println("0");
+	}
+	
+	public void getPraise(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException{
+		String name = (String) request.getSession().getAttribute("loginStatus");
+		ArrayList<Praise> praises = labreportDAO.getPraise(name);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(praises);
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().println(json);
 	}
 	
 }

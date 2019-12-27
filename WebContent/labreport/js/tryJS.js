@@ -288,6 +288,34 @@ $(function(){
 
     /****************************页面刷新调用函数*******************************/
 
+    function createPraise(praise){
+        var praiseDIV = '<div class="praise">'+
+                            '<img src="img/praise'+praise+'.png" alt="">'+
+                        '</div>';
+        $(".likes .reply-count").before(praiseDIV);
+    }
+
+    function showPraise(){
+        $.post("indexServlet",{
+            infor: "getPraise",
+        },function(data){
+            for(var i=0;i<posts.length;i++){
+                var topic = posts[i];
+                var title = topic["topicName"];
+                var isPraise = 0;
+                for(var j=0;j<data.length;j++){
+                    var praise = data[j];
+                    if(title==praise["topicname"]){
+                        isPraise = 1;
+                    }else{
+                        isPraise = 0;
+                    }
+                }
+                createPraise(isPraise);
+            }
+        },"json");
+    }
+
     function getLoginStatus(){
         $.post("indexServlet",{infor: "getLoginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
@@ -308,6 +336,8 @@ $(function(){
                 }
                 // 添加评论按钮
                 $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
+                //添加点赞按钮
+                // showPraise();
             }
         },"json");
         $.post("indexServlet",{
@@ -320,6 +350,36 @@ $(function(){
             $(".user-value")[0].innerHTML = userNum;
             $(".topic-value")[0].innerHTML = topicNum;
             $(".comment-value")[0].innerHTML = commentNum;
+        },"json");
+    }
+
+    function createHotPost(avatar,title,likes){
+        var hotPostDIV = '<div class="hot-post clear-fix">'+
+                            '<div class="hot-avatar">'+
+                                '<img src="'+avatar+'" alt="avatar">'+
+                            '</div>'+
+                            '<div class="hot-content">'+title+'</div>'+
+                            '<div class="hot-infor">'+
+                                '<span class="reply-count">'+likes+'</span>'+
+                            '</div>'+
+                        '</div>';
+        $("#hot-posts").append(hotPostDIV);
+    }
+
+    function showHotPost(){
+        $.post("indexServlet",{
+            infor: "getTopicOrder"
+        },function(data){
+            console.log(data);
+            $("#hot-posts").empty();
+            //输出热度前五的帖子
+            for(var i=0;i<data.length||i<5;i++){
+                hotTopic = data[i];
+                var avatar = getUserAttr(hotTopic["posterName"],"avatar",users);
+                var title = hotTopic["topicName"];
+                var likes = hotTopic["likes"];
+                createHotPost(avatar,title,likes);
+            }
         },"json");
     }
 
@@ -340,6 +400,7 @@ $(function(){
                     createPost(title,content,avatar,poster,likes);
                 }
                 getLoginStatus();
+                showHotPost();
             },"json");
         },"json");
     }
@@ -454,6 +515,25 @@ $(function(){
         },function(data){
             window.location.reload();
         },"json");
+    });
+
+    /*******************************点赞功能*************************************/
+    $("#posts").on("click",".praise",function(){
+        var src = $(event.target)[0].src;
+        var posttitle = $(event.target).closest(".post").children();
+        var h3 = posttitle.children()[0];
+        var title = h3.innerHTML;
+        console.log(title);
+        if(src=="http://localhost:8080/web_1/labreport/img/praise1.png"){
+            $(event.target).attr("src","img/praise0.png");
+        }else{
+            $(event.target).attr("src","img/praise1.png");
+            // $.post("indexServlet",{
+            //     infor: "addPraise",
+            //     title: title
+            // },function(data){
+            // },"json")
+        }
     });
 
 });
