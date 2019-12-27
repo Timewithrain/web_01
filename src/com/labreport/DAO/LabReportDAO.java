@@ -332,7 +332,7 @@ public class LabReportDAO {
 	
 	public ArrayList<Praise> getPraise(String username) {
 		ArrayList<Praise> praises = new ArrayList<Praise>();
-		String sql = "select * from praise where username=?";
+		String sql = "select * from praise where username=? and praise=1";
 		String title = null;
 		boolean praise = false;
 		try {
