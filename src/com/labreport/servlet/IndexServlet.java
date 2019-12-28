@@ -154,7 +154,16 @@ public class IndexServlet extends HttpServlet {
 		String name = (String) request.getSession().getAttribute("loginStatus");
 		String title = request.getParameter("title");
 		labreportDAO.addPraise(new Praise(name, title, true));
-		response.getWriter().println("0");
+		int likes = labreportDAO.getTopic(title).getLikes();
+		response.getWriter().println(likes);
+	}
+	
+	public void subPraise(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException {
+		String name = (String) request.getSession().getAttribute("loginStatus");
+		String title = request.getParameter("title");
+		labreportDAO.subPraise(new Praise(name, title, false));
+		int likes = labreportDAO.getTopic(title).getLikes();
+		response.getWriter().println(likes);
 	}
 	
 	public void getPraise(HttpServletRequest request,HttpServletResponse response,LabReportDAO labreportDAO) throws IOException{

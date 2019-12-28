@@ -227,6 +227,26 @@ public class LabReportDAO {
 		return comments;
 	}
 	
+	public Topic getTopic(String title) {
+		String sql = "select * from topic where topicname=?";
+		int likes = 0;
+		String content = null;
+		String posterName = null;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, title);
+			ResultSet set = statement.executeQuery();
+			if(set.next()) {
+				content = set.getString("title");
+				posterName = set.getString("poster");
+				likes = set.getInt("likes");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new Topic(title,content,likes,posterName);
+	}
+	
 	public ArrayList<Topic> getTopicOrder(){
 		ArrayList<Topic> topics = new ArrayList<Topic>();
 		String sql = "select * from topic order by likes desc";
@@ -325,6 +345,45 @@ public class LabReportDAO {
 			statement.setBoolean(3, p.isPraise());
 			statement.execute();
 			connection.commit();
+			addLikes(p.getTopicname());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addLikes(String title) {
+		String sql = "update topic set likes=likes+1 where topicname=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, title);
+			statement.execute();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void subPraise(Praise p) {
+		String sql = "delete from praise where topicname=? and username=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, p.getTopicname());
+			statement.setString(2, p.getUsername());
+			statement.execute();
+			connection.commit();
+			subLikes(p.getTopicname());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void subLikes(String title) {
+		String sql = "update topic set likes=likes-1 where topicname=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, title);
+			statement.execute();
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -332,17 +391,15 @@ public class LabReportDAO {
 	
 	public ArrayList<Praise> getPraise(String username) {
 		ArrayList<Praise> praises = new ArrayList<Praise>();
-		String sql = "select * from praise where username=? and praise=1";
+		String sql = "select * from praise where username=?";
 		String title = null;
-		boolean praise = false;
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, username);
 			ResultSet rs = statement.executeQuery();
 			while(rs.next()) {
 				title = rs.getString("topicname");
-				praise = rs.getBoolean("praise");
-				praises.add(new Praise(username, title, praise));
+				praises.add(new Praise(username, title, true));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

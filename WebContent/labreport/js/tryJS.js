@@ -2,7 +2,9 @@ $(function(){
     var users = new Array();
     var posts = new Array();
     var comments = new Array();
+    var praises = new Array();
     var titleForComment;
+    var isLogin = false;
 
     $("#login-dialog").dialog({
         title: "用户登录",
@@ -41,6 +43,8 @@ $(function(){
                         }else if(re=="1"){
                             $(".error-box4").append('<p class="error">密码错误</p>');
                         }else {
+                            isLogin = true;
+                            // start();
                             var name = data;
                             var login = $("#login");
                             //修改登录按钮
@@ -53,6 +57,7 @@ $(function(){
                             // 添加评论按钮
                             $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
                             $("#login-dialog").dialog("close");
+                            window.location.reload();
                         }
                     },
                     dataType: "text",
@@ -137,7 +142,14 @@ $(function(){
 
     /****************************帖子页面函数***************************/
 
-    function createPost(title,content,avatar,userName,likes){
+    function createPost(title,content,avatar,userName,isPraise,likes){
+        var praiseArea = '<div class="praise">'+
+                            '<img src="img/praise'+isPraise+'.png" alt="">'+
+                        '</div>';
+        //当未登录时不显示点赞按钮
+        if(isLogin==false){
+            praiseArea = "";
+        }
         var postDIV = '<div class="post">'+
                         '<div class="post-title">'+
                             '<h3>'+title+'</h3>'+
@@ -155,6 +167,7 @@ $(function(){
                             '<div class="do-comment-btn">'+
                             '</div>'+
                             '<div class="likes">'+
+                                praiseArea +
                                 '<span class="reply-count">'+likes+'</span>'+
                             '</div>'+
                         '</div>'+
@@ -288,40 +301,24 @@ $(function(){
 
     /****************************页面刷新调用函数*******************************/
 
-    function createPraise(praise){
-        var praiseDIV = '<div class="praise">'+
-                            '<img src="img/praise'+praise+'.png" alt="">'+
-                        '</div>';
-        $(".likes .reply-count").before(praiseDIV);
-    }
-
-    function showPraise(){
-        $.post("indexServlet",{
-            infor: "getPraise",
-        },function(data){
-            for(var i=0;i<posts.length;i++){
-                var topic = posts[i];
-                var title = topic["topicName"];
-                var isPraise = 0;
-                for(var j=0;j<data.length;j++){
-                    var praise = data[j];
-                    if(title==praise["topicname"]){
-                        isPraise = 1;
-                    }else{
-                        isPraise = 0;
-                    }
-                }
-                createPraise(isPraise);
-            }
-        },"json");
-    }
-
     function getLoginStatus(){
         $.post("indexServlet",{infor: "getLoginStatus"},function(data){
             //若未登录则返回notLogin，若登录则在页面显示登录信息
             if($.trim(data["infor"])=="notLogin"){
+                isLogin = false;
+                for(var i=0;i<posts.length;i++){
+                    var post = posts[i];
+                    var title = post["topicName"];
+                    var content = post["title"];
+                    var likes = post["likes"];
+                    var poster = post["posterName"];
+                    var avatar = getUserAttr(poster,"avatar",users);
+                    var isPraise = getIsPraise(title);
+                    createPost(title,content,avatar,poster,isPraise,likes);
+                }
                 return
             }else{
+                isLogin = true;
                 var name = data["infor"];
                 var login = $("#login");
                 //修改登录按钮
@@ -334,10 +331,18 @@ $(function(){
                 if(postbtn==null){
                     $("#nav").append('<a href="#" class="do-post">发帖</a>');
                 }
+                for(var i=0;i<posts.length;i++){
+                    var post = posts[i];
+                    var title = post["topicName"];
+                    var content = post["title"];
+                    var likes = post["likes"];
+                    var poster = post["posterName"];
+                    var avatar = getUserAttr(poster,"avatar",users);
+                    var isPraise = getIsPraise(title);
+                    createPost(title,content,avatar,poster,isPraise,likes);
+                }
                 // 添加评论按钮
                 $(".do-comment-btn").append('<a href="#" class="do-comment">查看评论</a>');
-                //添加点赞按钮
-                // showPraise();
             }
         },"json");
         $.post("indexServlet",{
@@ -370,7 +375,6 @@ $(function(){
         $.post("indexServlet",{
             infor: "getTopicOrder"
         },function(data){
-            console.log(data);
             $("#hot-posts").empty();
             //输出热度前五的帖子
             for(var i=0;i<data.length||i<5;i++){
@@ -383,6 +387,17 @@ $(function(){
         },"json");
     }
 
+    //根据传回的该用户的点赞情况生成点赞信息
+    function getIsPraise(title){
+        for(var i=0;i<praises.length;i++){
+            var praise = praises[i];
+            if(title==praise["topicname"]){
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     //获取user以及topic
     function start(){
         isOpenPost = false;
@@ -390,16 +405,10 @@ $(function(){
             users = data;
             $.post("indexServlet",{infor: "getTopic"},function(data){
                 posts = data;
-                for(var i=0;i<posts.length;i++){
-                    var post = posts[i];
-                    var title = post["topicName"];
-                    var content = post["title"];
-                    var likes = post["likes"];
-                    var poster = post["posterName"];
-                    var avatar = getUserAttr(poster,"avatar",users);
-                    createPost(title,content,avatar,poster,likes);
-                }
-                getLoginStatus();
+                $.post("indexServlet",{infor: "getPraise",},function(data){
+                    praises = data;
+                    getLoginStatus();
+                },"json");
                 showHotPost();
             },"json");
         },"json");
@@ -413,6 +422,7 @@ $(function(){
 
     $("body").on("click","#bnt-signout",function(){
         $.post("exit",function(){
+            isLogin = false;
             //退出以后刷新页面
             window.location.reload();
         });
@@ -523,16 +533,31 @@ $(function(){
         var posttitle = $(event.target).closest(".post").children();
         var h3 = posttitle.children()[0];
         var title = h3.innerHTML;
-        console.log(title);
         if(src=="http://localhost:8080/web_1/labreport/img/praise1.png"){
-            $(event.target).attr("src","img/praise0.png");
+            var img = $(event.target);
+            img.attr("src","img/praise0.png");
+            $.post("indexServlet",{
+                infor: "subPraise",
+                title: title
+            },function(data){
+                var likes = img.closest(".likes");
+                var count = likes.children(".reply-count")[0];
+                count.remove();
+                likes.append('<span class="reply-count">'+$.trim(data)+'</span>');
+            },"text");
         }else{
-            $(event.target).attr("src","img/praise1.png");
-            // $.post("indexServlet",{
-            //     infor: "addPraise",
-            //     title: title
-            // },function(data){
-            // },"json")
+            // $(event.target).attr("src","img/praise1.png");
+            var img = $(event.target);
+            img.attr("src","img/praise1.png");
+            $.post("indexServlet",{
+                infor: "addPraise",
+                title: title
+            },function(data){
+                var likes = img.closest(".likes");
+                var count = likes.children(".reply-count")[0];
+                count.remove();
+                likes.append('<span class="reply-count">'+$.trim(data)+'</span>');
+            },"text");
         }
     });
 
